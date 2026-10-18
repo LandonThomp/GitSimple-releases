@@ -56,6 +56,7 @@ Settings marked **Advanced** below sit in a collapsed **Advanced** group in Basi
 | Commits that belong to an issue *(per workspace)* | Key in front of the summary | None, `Refs #N`, `Fixes #N`, or the key in front of the summary; live preview |
 | Pull request title / body templates *(per workspace)* | `{title}` / `{commits}\n\n{closes}` | Placeholders `{title}`, `{issue}`, `{key}`, `{branch}`; body also `{commits}`, `{closes}`; live preview |
 | Merge tool | None | Pick with Browse or from the tools found: VS Code, P4Merge, KDiff3, Beyond Compare, Meld, WinMerge, TortoiseGitMerge. A path can't be typed in |
+| Unity Smart Merge | None | UnityYAMLMerge for Unity scenes, prefabs and other YAML assets (`.unity`, `.prefab`, `.asset`, `.mat`, `.controller`, `.anim` and more). Pick with Browse (`UnityYAMLMerge.exe` only) or from the Unity Editors installed with Unity Hub: the repository's Unity version comes first (from `ProjectSettings/ProjectVersion.txt`), then the newest. Other files keep the merge tool above; with this empty, Unity files use it too |
 | Default reset mode | Mixed | The mode reset and Undo start with. A hard reset always needs the branch name typed |
 | Confirm before… | Cherry-pick, Revert, Pushing tags: on · Applying or popping a stash: off | Extra "are you sure" for medium-risk actions. Actions that can lose data always preview, whatever this says |
 | Rebase defaults | Autostash on, autosquash off | "Set changes aside during a rebase (autostash)" and "Arrange fixup! and squash! commits (autosquash)" |
@@ -72,6 +73,9 @@ Settings marked **Advanced** below sit in a collapsed **Advanced** group in Basi
 | Theme family | Obsidian & Copper | Also Midnight Evergreen, Graphite & Blue, Carbon & Teal, Nordic Frost, Ink & Indigo. Each has dark and light |
 | Code colours | From theme | Also GitHub, One, Solarized, Dracula, or one you imported. See [Code colours](#code-colours) |
 | Interface font / Code font | Inter / Geist Mono | Any installed font, or a font file you imported. See [Fonts](#fonts) |
+| Code font size / Code line height | 12.5 px / 1.6 | Size of code, and the space per line as a multiple of the size. See [Code text](#code-text) |
+| Code ligatures | On | Fonts that have them join `=>`, `!==` and similar into one sign. Off shows every character on its own |
+| Tab width | 8 | How many spaces a tab takes in code: 2, 4 or 8 |
 | Text size, density, animations | | |
 
 ### Custom themes
@@ -123,6 +127,15 @@ Rules: `#RRGGBB` colours only, keys from the list in [Custom themes](#custom-the
 **Interface font** sets the font of menus, lists and text; headings keep their title font. **Code font** sets the font of diffs, Files, blame and other code; installed monospace fonts are listed first. The lists show the fonts in your Windows font folders (yours and all users'), including separate weights such as "Segoe UI Semibold". A sample line under each shows the choice. If a chosen font is uninstalled or its file is gone, the default font shows instead (and Settings says so for an imported file).
 
 **Import font file** adds a `.ttf`, `.otf`, `.woff` or `.woff2` file (up to 10 MB, at most 10 files) to both lists, named after the file. GitSimple keeps its own copy; nothing is installed in Windows. Collections (`.ttc`) aren't supported. One file is one font: a variable font covers every weight, other fonts get a computed bold. Removing an imported font sets any setting that used it back to the default. **Reset to defaults** goes back to Inter and Geist Mono and keeps your imports.
+
+### Code text
+
+**Code font size**, **Code line height**, **Code ligatures** and **Tab width** apply to everything shown in the code font: diffs (Changes, History, pull requests), Files (content and blame), the Console output and the conflict resolver. The sample under **Code font** shows them as you change them.
+
+- Size is in pixels (11 to 18); **Text size** still zooms it with the rest of the window.
+- Line height is 1.2 to 2.0 times the size, rounded to a whole pixel and never under 16 px; the hint shows the result. Diffs and files use the same size and height (12.5 px and 20 px per line by default).
+- Ligatures depend on the font: Cascadia Code, Fira Code and JetBrains Mono have them, many others have none, and then the setting changes nothing.
+- **Reset to defaults** sets all four back.
 
 ## Updates
 

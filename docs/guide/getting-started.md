@@ -32,6 +32,19 @@ Use **Add a repository**, then either:
 
 A repository added without a clone still has its issue views. The Code views show **Clone this repository / Locate existing clone** until there is one.
 
+### Cloning a big repository
+
+Game projects and monorepos can be too large to download whole. **Clone to folder…** has **Options for big repositories** (closed by default; with every option off you get a normal full clone):
+
+| Option | What you get | The trade-off |
+| --- | --- | --- |
+| **Partial clone** | The files of the commit you check out, and the rest of the history without file contents (`--filter=blob:none`) | Older file versions are downloaded when a view needs them, so History, Blame and switching branches need the network and can be slower |
+| **Shallow clone** | Only the last N commits of every branch (`--depth`) | History, Blame and Undo stop at the oldest downloaded commit, and merging with an older branch may fail. **Download the full history** fixes that later |
+| **Only some folders** | A sparse checkout: the top-level files plus the folders you list, one per line (for example `Assets/Characters`) | The other folders aren't on your disk until you add them. Commits, branches and pushes still cover the whole repository |
+| **Skip LFS files for now** | LFS files (textures, models, audio) stay small pointer files | A tool that opens a pointer file sees text, not the asset, until you download the LFS files of that folder |
+
+You can combine them. Everything after the clone (changing folders, downloading LFS files for some folders, the full history) is in **Repository**, **Folders** in Advanced mode; see [Folders: big repositories](advanced-git.md#folders-big-repositories).
+
 ## Home
 
 **Home** is at the top of the sidebar (or `G` then `D`). A new install opens here; an existing install keeps the view it was on.
@@ -40,6 +53,7 @@ It shows:
 
 - the active branch, with how far ahead / behind it is;
 - a **Status** card: uncommitted changes, an operation in progress, the branch's pull request;
+- **My locks**, when you hold Git LFS locks in this repository: each file, how long you've held it, and **Unlock** (a file with uncommitted changes says "commit first": Git LFS only unlocks a file with none). See [Git LFS](advanced-git.md#locks);
 - **My open issues** (works without a clone);
 - the trust banner ("Review and trust…") and the operation banner when they apply.
 
