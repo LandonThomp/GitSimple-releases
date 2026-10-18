@@ -4,7 +4,9 @@
 
 Pick a repository, see what to do next, and do it: commit, push, open a pull request, move an issue across the board. No terminal needed.
 
-This repository only holds GitSimple's installers and updates. The source code is private.
+![GitSimple Home: the next step, status and your open issues](docs/images/home.png)
+
+This repository only holds GitSimple's installers, updates and user guide. The source code is private.
 
 ## GitSimple is invite-only
 
@@ -31,6 +33,36 @@ Your sign-in is stored in Windows Credential Manager, never in a file. You can s
 GitSimple checks for updates when it starts and every 6 hours, and shows a notification when a new version is out. Click **Update now**; the app restarts on the new version. Every update is checked against GitSimple's signing key before it installs.
 
 To turn automatic checks off, go to **Settings, Updates**. You can still press **Check for updates** there at any time.
+
+## How you use it
+
+**Home** always shows one **Next step** button. Follow it and you go round the everyday loop:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/workflow-dark.svg">
+  <img alt="The everyday loop: pick an issue, create a branch, edit and commit, push, open a pull request, merge and the issue closes" src="docs/images/workflow-light.svg" width="100%">
+</picture>
+
+**Commit your changes.** Tick what goes in, write a summary, commit.
+
+![Changes view: files ready to commit, a diff, and the commit box](docs/images/changes.png)
+
+**Plan on the board.** Drag an issue to change its status.
+
+![Issue board with columns per status](docs/images/board.png)
+
+GitSimple starts in **Basic** mode: the everyday views, in plain words. Switch to **Advanced** in **Settings, Appearance, Interface** for stashes, tags, rebasing, the git console and more.
+
+## User guide
+
+One page per topic:
+
+- **[Getting started](docs/guide/getting-started.md)**: sign in, add a repository, how Home picks the next step, Basic and Advanced mode
+- **[Code](docs/guide/code.md)**: commit, pull and push, branches, history, pull requests, linking code to issues
+- **[Advanced git](docs/guide/advanced-git.md)**: stashes, rewriting history, resolving conflicts, undo, tags, remotes, the console
+- **[Issues](docs/guide/issues.md)**: list, board and sprints, the issue panel, GitHub Projects
+- **[Settings](docs/guide/settings.md)**: every setting with its default, themes
+- **[Keyboard shortcuts](docs/guide/shortcuts.md)**
 
 ## Please don't share the installer
 
