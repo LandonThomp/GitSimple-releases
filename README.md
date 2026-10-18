@@ -64,6 +64,29 @@ One page per topic:
 - **[Settings](docs/guide/settings.md)**: every setting with its default, themes
 - **[Keyboard shortcuts](docs/guide/shortcuts.md)**
 
+## Coming soon
+
+Being worked on next:
+
+- **Find in a file or diff** (`Ctrl+F`) and **go to line** (`Ctrl+G`)
+- **Ignore whitespace changes** in diffs
+- **Review pull requests**: comment on lines (with suggestions), approve or request changes
+- **Rebindable keyboard shortcuts**
+
+## Planned
+
+- **Code viewer**: expand or collapse unchanged code around a change, image diffs (side by side, overlay, swipe)
+- **History**: compare branches and commits, go to a commit by its ID, view any file at any commit
+- **Safer git**: undo anything, including uncommitted work; a safety net before commit and push (secrets, large files, leftover conflict markers); before → after previews for merge, rebase, reset and force push
+- **Commits**: commit message drafts per branch, add files to `.gitignore`, git identity per repository, signed commits
+- **Pull requests**: resolve review threads, mark files as viewed, warnings when other pull requests touch the same files
+- **Issues**: issue templates and forms, a multi-repository dashboard on Home, an issue-to-merge autopilot
+- **Game development**: Git LFS tracking, lock-first workflow for binary assets, Unity `.meta` checks and Smart Merge, sparse and partial clones for big repositories
+- **Appearance**: code font and ligatures, colour-blind-safe and high-contrast diff colours
+- **Work networks**: proxy and custom certificate support
+
+Further out: GitLab, Bitbucket and Azure DevOps; Windows notifications and a tray icon; translations. Plans can change, and nothing here has a date.
+
 ## Please don't share the installer
 
 Send people to whoever invited you instead. The installer won't open for anyone who isn't on the invite list.
