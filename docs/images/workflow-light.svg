@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1012 76" width="1012" height="76" role="img" aria-labelledby="t">
+  <title id="t">The everyday loop: pick an issue, create a branch, edit and commit, push, open a pull request, merge and the issue closes</title>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#84766B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <g font-family="Segoe UI, -apple-system, Helvetica, Arial, sans-serif" font-size="15" text-anchor="middle" dominant-baseline="central">
+    <rect x="1" y="10" width="150" height="56" rx="10" fill="#FFFCF6" stroke="#DDD3C6"/>
+    <text x="76" y="38" fill="#302923">Pick an issue</text>
+    <rect x="173" y="10" width="150" height="56" rx="10" fill="#FFFCF6" stroke="#DDD3C6"/>
+    <text x="248" y="38" fill="#302923">Create a branch</text>
+    <rect x="345" y="10" width="150" height="56" rx="10" fill="#FFFCF6" stroke="#DDD3C6"/>
+    <text x="420" y="38" fill="#302923">Edit and commit</text>
+    <rect x="517" y="10" width="150" height="56" rx="10" fill="#FFFCF6" stroke="#DDD3C6"/>
+    <text x="592" y="38" fill="#302923">Push</text>
+    <rect x="689" y="10" width="150" height="56" rx="10" fill="#FFFCF6" stroke="#DDD3C6"/>
+    <text x="764" y="38" fill="#302923">Pull request</text>
+    <rect x="861" y="10" width="150" height="56" rx="10" fill="#F7E6D9" stroke="#A15A37"/>
+    <text x="936" y="30" fill="#302923">Merge</text>
+    <text x="936" y="50" fill="#84766B" font-size="12">the issue closes</text>
+  </g>
+  <g stroke="#84766B" stroke-width="1.6" marker-end="url(#a)">
+    <line x1="154" y1="38" x2="169" y2="38"/>
+    <line x1="326" y1="38" x2="341" y2="38"/>
+    <line x1="498" y1="38" x2="513" y2="38"/>
+    <line x1="670" y1="38" x2="685" y2="38"/>
+    <line x1="842" y1="38" x2="857" y2="38"/>
+  </g>
+</svg>
