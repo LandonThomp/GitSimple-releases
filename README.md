@@ -64,6 +64,7 @@ One page per topic:
 - **[Settings](docs/guide/settings.md)**: every setting with its default, themes
 - **[Keyboard shortcuts](docs/guide/shortcuts.md)**
 
+<!-- roadmap:start: copied from docs/roadmap.md in the GitSimple source repo on each release. Edit it there; changes here are overwritten. -->
 ## Coming soon
 
 Being worked on next:
@@ -86,6 +87,7 @@ Being worked on next:
 - **Work networks**: proxy and custom certificate support
 
 Further out: GitLab, Bitbucket and Azure DevOps; Windows notifications and a tray icon; translations. Plans can change, and nothing here has a date.
+<!-- roadmap:end -->
 
 ## Please don't share the installer
 
