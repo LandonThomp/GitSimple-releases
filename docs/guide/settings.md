@@ -41,6 +41,7 @@ Settings marked **Advanced** below sit in a collapsed **Advanced** group in Basi
 | Default clone folder | `%USERPROFILE%\source\repos` | Where **Clone to folder…** starts |
 | Editor | First one found | What **Open in editor** starts: VS Code, VS Code Insiders, Cursor, VSCodium, Windsurf, Sublime Text or Notepad++. Pick with Browse or from the editors found; a path can't be typed in. Clear returns to "first one found" |
 | Diff layout / context lines / wrap long lines | Unified, 3, off | Also switchable in the diff header |
+| Whitespace changes | Show | **Ignore amount** (`git diff -b`) or **Ignore all** (`git diff -w`). Also in the diff header. While whitespace is hidden, hunks and lines can't be staged one by one. See [Reading a diff](code.md#reading-a-diff) |
 | Syntax highlighting | On | Colours code by language in diffs, Files (content and blame) and the conflict resolver. Files over 512 KB or 20,000 lines are always shown plain; turn it off on a slow machine |
 
 ### Advanced
@@ -70,8 +71,9 @@ Settings marked **Advanced** below sit in a collapsed **Advanced** group in Basi
 | --- | --- | --- |
 | Interface | Basic (new installs) | Basic or Advanced; see [Getting started](getting-started.md#basic-and-advanced-mode). "Reset to defaults" does not change it |
 | Appearance | Dark | Dark, light, or follow the system |
-| Theme family | Obsidian & Copper | Also Midnight Evergreen, Graphite & Blue, Carbon & Teal, Nordic Frost, Ink & Indigo. Each has dark and light |
+| Theme family | Obsidian & Copper | Also Midnight Evergreen, Graphite & Blue, Carbon & Teal, Nordic Frost, Ink & Indigo and High Contrast. Each has dark and light. See [High Contrast](#high-contrast) |
 | Code colours | From theme | Also GitHub, One, Solarized, Dracula, or one you imported. See [Code colours](#code-colours) |
+| Diff colours | From theme | Also Colour-blind safe (blue added, orange removed). See [Diff colours](#diff-colours) |
 | Interface font / Code font | Inter / Geist Mono | Any installed font, or a font file you imported. See [Fonts](#fonts) |
 | Code font size / Code line height | 12.5 px / 1.6 | Size of code, and the space per line as a multiple of the size. See [Code text](#code-text) |
 | Code ligatures | On | Fonts that have them join `=>`, `!==` and similar into one sign. Off shows every character on its own |
@@ -82,9 +84,25 @@ Settings marked **Advanced** below sit in a collapsed **Advanced** group in Basi
 
 **Import theme** loads your own family from a JSON file. **Export current** saves the selected family in the same format (or copies it as JSON).
 
-Rules: `#RRGGBB` colours only, every key of `dark` and `light` required, family name up to 40 characters, at most 20 imported families, no name that matches a built-in. `semantic` is optional and ignored on import.
+Rules: `#RRGGBB` colours only, every key of `dark` and `light` required, family name up to 40 characters, at most 20 imported families, no name that matches a built-in. Anything else is rejected with a message that names the field: an unknown key or variant (also in `syntax`, where older versions ignored it), a colour that isn't `#RRGGBB`, or a value of the wrong shape. Nothing from a rejected file is kept.
 
-Code colours are optional: add `syntax` with `dark` and/or `light`, each with any of `keyword`, `string`, `comment`, `function`, `constant`, `parameter`, `punctuation`, `stringExpression`, `link`. Colours you leave out are derived from the theme (keywords in the accent, strings green, functions blue, constants amber, comments in the muted colour) and lightened or darkened until they are readable on the background. Export includes them.
+Each family can also have three optional groups. Each has `dark` and/or `light` (no other variants), and each variant may set any of its keys:
+
+| Group | Keys | Colours you leave out |
+| --- | --- | --- |
+| `syntax` (code colours) | `keyword`, `string`, `comment`, `function`, `constant`, `parameter`, `punctuation`, `stringExpression`, `link` | Derived from the theme (keywords in the accent, strings green, functions blue, constants amber, comments in the muted colour) and lightened or darkened until they are readable on the background |
+| `semantic` (status colours: success, errors, warnings) | `success`, `error`, `warning`, `info`, `neutral` | The file's top-level `semantic`, or else the built-in ones |
+| `diff` (diff colours) | `added`, `removed`, `addedEmphasis`, `removedEmphasis`, `conflict` | `added` = `success`, `removed` = `error`, `conflict` = `error`, each emphasis = its line colour |
+
+The `diff` keys:
+
+- `added` and `removed`: the + and − markers, the +N / −N counts, the A and D file letters, and (tinted to 12%) the background of added and removed lines.
+- `addedEmphasis` and `removedEmphasis`: the changed words inside a changed line, tinted to 35%.
+- `conflict`: conflicted files ("!"), conflict labels and the merge-conflict icon on pull requests.
+
+`added`, `removed` and `conflict` are shown as text, so they are lightened or darkened until they have at least 4.5:1 contrast on the background (WCAG AA). The emphasis colours are only used as tinted backgrounds and are kept as given. A [diff colour preset](#diff-colours) other than From theme replaces a family's `diff`.
+
+The top-level `semantic` is optional too. When present it needs every key of both variants, and it applies to each family in the file; keys a family sets in its own `semantic` win. **Export current** writes the family's `syntax` and `diff` and puts the status colours in effect in the top-level `semantic`, so the file imports back unchanged under a new name.
 
 ```json
 {
@@ -96,11 +114,29 @@ Code colours are optional: add `syntax` with `dark` and/or `light`, each with an
       "family": "My Theme",
       "dark":  { "background": "#171717", "surface": "#272421", "accent": "#D78A57", "text": "#F3EEE7", "muted": "#A59C91", "border": "#3B3632" },
       "light": { "background": "#F5F1E9", "surface": "#FFFCF6", "accent": "#A15A37", "text": "#302923", "muted": "#84766B", "border": "#DDD3C6" },
-      "syntax": { "dark": { "keyword": "#D78A57", "string": "#9CC48A" } }
+      "syntax": { "dark": { "keyword": "#D78A57", "string": "#9CC48A" } },
+      "diff": {
+        "dark":  { "added": "#56B4E9", "removed": "#E69F00", "conflict": "#CC79A7" },
+        "light": { "added": "#0072B2", "removed": "#A85300", "conflict": "#A2477B" }
+      }
     }
-  ]
+  ],
+  "semantic": {
+    "dark":  { "success": "#58AE87", "error": "#E47777", "warning": "#D5A45C", "info": "#6C9DD9", "neutral": "#969BA5" },
+    "light": { "success": "#237A50", "error": "#BD4141", "warning": "#98651F", "info": "#326EB1", "neutral": "#68717E" }
+  }
 }
 ```
+
+### High Contrast
+
+The **High Contrast** family meets WCAG AAA. Text, muted text, the accent, status colours and diff colours have at least 7:1 contrast on the background and on panels, and its code colours at least 7:1 on the background. Borders have at least 3:1. This holds with Code colours and Diff colours set to From theme; a code colour theme or the Colour-blind safe preset is only guaranteed AA (at least 4.5:1 for diff colours). Dark is white on black with a yellow accent; light is black on white with a dark blue accent. A test checks these ratios.
+
+### Diff colours
+
+**Diff colours** sets the colours of added, removed and conflicted lines and files, separately from the theme family. They are used in diffs (Changes, History, stashes, pull requests), file lists and the conflict resolver. **From theme** uses the family's own `diff` colours, or else its status colours (green and red in the built-in families). **Colour-blind safe** uses blue for added, orange for removed and reddish purple for conflicts. These hues stay apart with red-green colour blindness, and they are readable on every built-in family. **Reset to defaults** goes back to From theme.
+
+Colour is never the only signal. Changed lines keep their + and − markers in both the unified and the side-by-side view, and files keep their status letters (A, M, D, R, U, !).
 
 ### Code colours
 
@@ -136,6 +172,10 @@ Rules: `#RRGGBB` colours only, keys from the list in [Custom themes](#custom-the
 - Line height is 1.2 to 2.0 times the size, rounded to a whole pixel and never under 16 px; the hint shows the result. Diffs and files use the same size and height (12.5 px and 20 px per line by default).
 - Ligatures depend on the font: Cascadia Code, Fira Code and JetBrains Mono have them, many others have none, and then the setting changes nothing.
 - **Reset to defaults** sets all four back.
+
+## Keyboard shortcuts
+
+Every shortcut, grouped by where it works, with its keys. **Change** records new keys; see [Keyboard shortcuts](shortcuts.md#change-a-shortcut) for the rules.
 
 ## Updates
 

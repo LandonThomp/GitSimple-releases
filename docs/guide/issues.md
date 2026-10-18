@@ -28,6 +28,7 @@ A GitHub issue tracker for the active repository. The issue views never need a l
 - Columns follow the order of the status options; all of them show by default.
 - Moving a card into a closing status closes the issue; moving it out reopens it.
 - Hide or collapse columns. The choice is remembered per workspace.
+- In label mode, **Add column** (after the last column) creates a status: type a name such as `In progress` and GitSimple creates the label `status: In progress` on GitHub (with your prefix). It needs write access to the repository and is hidden when the status label prefix is empty. With a Project, add an option to the Project's status field on GitHub instead.
 
 ### Sprints
 
@@ -42,9 +43,34 @@ Click an issue to open it.
 - Pickers for status, priority, assignees, labels, sprint, estimate and milestone.
 - Close and reopen with a reason.
 - Relations: parent, sub-issues, blocked by, blocking, mentioned in.
+- **Sub-issues** break an issue into parts that must be finished first, such as "Server enhancements" with one sub-issue per change:
+  - **Add** attaches an existing open issue; **New** creates an issue with just a title and attaches it. An issue can have only one parent: GitHub refuses one that already has a parent, and an issue that is above this one.
+  - The heading counts how many are done. Hover a sub-issue and click **x** to remove it from the list (the issue itself stays).
+  - When every sub-issue is closed and the issue is still open, the panel offers **Close #N as completed**. Nothing closes on its own.
 - **Development**: linked branches, pull requests and commits (see [Issues and code together](code.md#issues-and-code-together)).
 
 Links to other issues of the repository open inside the app; other links open in your browser (https only). GitHub's rendered markdown is shown sanitized. Images in a private repository are fetched with your sign-in (only for the active repository, at most 25 MB each).
+
+## Creating an issue
+
+**New issue** (shortcut C, the toolbar button, or a board column's **+**) opens a dialog with a title, a description and pickers for status, priority, sprint, estimate, labels, assignees, milestone and type.
+
+### Issue templates and issue forms
+
+When the repository has issue templates in `.github/ISSUE_TEMPLATE/` on its default branch, the dialog first shows a chooser. GitSimple reads the templates over the GitHub API, so this works without a local clone. A repository without templates opens straight on a blank issue, as before.
+
+- **Templates and forms** are listed in GitHub's order: forms (`.yml`, `.yaml`) before Markdown templates (`.md`), each alphabetically by file name. Prefix file names with numbers (`1-bug.yml`) to set the order.
+- **Markdown templates** prefill the title, description, labels, assignees and issue type from their front matter (`title`, `labels`, `assignees`, `type`; `name` and `about` are required, as on GitHub).
+- **Issue forms** replace the description with the form's fields: text (`markdown`), single-line inputs, text areas, dropdowns (single or multiple choice), checkboxes and uploads. The form's title, labels, assignees and type are preselected. **Create issue** writes the answers into the description the way GitHub does: a `### Label` heading per field, `_No response_` for an empty answer, `- [X]` for a ticked box, and a code block for a text area with `render`. Markdown text is not part of the issue.
+- **Required answers** (`required`, `min_length`, required checkboxes) are checked before the issue is created; the dialog moves to the first field that needs an answer. GitHub enforces them only in public repositories; GitSimple enforces them everywhere.
+- **Uploads**: files can't be uploaded from GitSimple. Paste links to the files, or attach them on GitHub after creating the issue.
+- Labels, assignees and the issue type a template names are applied only when the repository has them, like on GitHub. A template's `projects` are not applied.
+- `config.yml`: `blank_issues_enabled: false` hides **Blank issue** for people with read or triage access; people with write access still see it, marked **Maintainers only**, as on GitHub. Each of the `contact_links` is shown with its description and opens in your browser.
+- Use the arrow next to the dialog title to go back to the chooser. What you typed is replaced only when you pick another template.
+- The blank issue shows while the templates load. If you start typing before they arrive, the dialog stays on the blank issue.
+- Only `.github/ISSUE_TEMPLATE/` of the repository itself is read: templates inherited from the owner's `.github` repository and a single legacy `ISSUE_TEMPLATE.md` are not offered.
+- A template file that GitHub would not offer (invalid YAML, a missing `name`, `about` or `description`, a form without a field that is not markdown, duplicate labels or ids, a dropdown option `None`, and so on) is left out too. **N template files can't be used** under the chooser lists each one with the reason. Files larger than 256 KB and templates after the first 30 are skipped the same way.
+- Templates are read again when the dialog opens after five minutes. If they can't be read (for example, during a rate limit), the dialog opens on a blank issue.
 
 ## Project mode and label mode
 
@@ -52,7 +78,7 @@ A GitHub Project is optional. A workspace is in **project mode** when it has a P
 
 | | Project mode | Label mode |
 | --- | --- | --- |
-| Status | The Project's status field; its options are the board columns | Open / closed, plus optional **status labels** (default prefix `status: `) as extra columns |
+| Status | The Project's status field; its options are the board columns | Open / closed, plus optional **status labels** (default prefix `status: `) as extra columns. **Add column** on the Board creates one |
 | Priority | The Project's priority field | **Priority labels** (default prefix `priority: `), ordered urgent to low when the names are common ones |
 | Sprints, estimates | The Project's iteration and number fields | Not available ("Link a GitHub Project in Settings to enable sprints") |
 | Closing | A status marked as closing closes the issue with its reason | The same for status labels, plus the built-in Closed column |

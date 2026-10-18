@@ -33,6 +33,7 @@ Right-click a commit in History, or use its "…" menu.
 | --- | --- |
 | **Undo this commit's changes (revert)** | Basic and Advanced. A merge commit asks which parent to keep |
 | **Create branch here**, **Copy SHA** | Basic and Advanced |
+| **Compare with current branch** | Basic and Advanced. A Shift-click range offers **Compare oldest and newest selected** (Advanced). See [Compare branches and commits](code.md#compare-branches-and-commits) |
 | **Copy onto current branch (cherry-pick)** | One commit or a Shift-click range, optional `-x` |
 | **Move current branch to this commit (reset)…** | Soft, mixed or hard. The preview lists commits no branch will have any more and, for hard, the uncommitted changes that are lost. **Hard needs the branch name typed** |
 | **Create tag here** | |
@@ -161,6 +162,10 @@ The commit box's [safety net](code.md#safety-net-before-a-commit) warns when a f
 - over **50 MB**: GitHub warns, so GitSimple suggests LFS.
 
 **Track \*.wav with LFS** (with the file's extension) adds the pattern and stages the file again, now as an LFS pointer, together with `.gitattributes` (and anything else you changed in `.gitattributes`). The file is staged as it is on disk, so a file that also has unstaged changes is left alone: stage it yourself when it is ready. A file whose type is already tracked but was staged before the pattern existed gets **Stage again for LFS**. If the file is still staged in full afterwards, the LFS filter isn't set up: run `git lfs install` and stage it again. With nothing staged, **Stage all and commit** also counts the big files it would stage. The warning never blocks the commit.
+
+### Big files before a push
+
+The [push preview's safety net](code.md#safety-net-before-a-push) checks the size of every file the pushed commits add or change, so a big file committed outside GitSimple shows up too, under the commit that added it. A file stored with LFS is a small pointer in the commit and is never listed. At 100 MB or more GitHub refuses the whole push: tracking the file with LFS now doesn't help, because the commit already holds the full file. Take it out of that commit first (amend it, or use the [interactive rebase editor](#interactive-rebase-editor) to edit an older one), then track it with LFS. The same preview also lists conflict markers and possible secrets in the pushed commits. It never blocks the push.
 
 ### Locks
 

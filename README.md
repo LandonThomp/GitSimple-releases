@@ -65,25 +65,15 @@ One page per topic:
 - **[Keyboard shortcuts](docs/guide/shortcuts.md)**
 
 <!-- roadmap:start: copied from docs/roadmap.md in the GitSimple source repo on each release. Edit it there; changes here are overwritten. -->
-## Coming soon
-
-Being worked on next:
-
-- **Find in a file or diff** (`Ctrl+F`) and **go to line** (`Ctrl+G`)
-- **Ignore whitespace changes** in diffs
-- **Review pull requests**: comment on lines (with suggestions), approve or request changes
-- **Rebindable keyboard shortcuts**
-
 ## Planned
 
-- **Code viewer**: expand or collapse unchanged code around a change, an overlay mode for image diffs
-- **History**: compare branches and commits, go to a commit by its ID, view any file at any commit
-- **Safer git**: undo anything, including uncommitted work; the safety net before a push too (today it checks before a commit); before → after previews for merge, rebase, reset and force push
-- **Commits**: commit message drafts per branch, add files to `.gitignore`, git identity per repository, signed commits
-- **Pull requests**: resolve review threads, mark files as viewed, warnings when other pull requests touch the same files
-- **Issues**: issue templates and forms, a multi-repository dashboard on Home, an issue-to-merge autopilot
+- **Code viewer**: an overlay mode for image diffs
+- **History**: view any file at any commit, and diff two versions of a file
+- **Safer git**: undo anything, including uncommitted work; before → after previews for merge, rebase, reset and force push
+- **Commits**: git identity per repository, signed commits
+- **Pull requests**: warnings when other pull requests touch the same files
+- **Issues**: a multi-repository dashboard on Home, an issue-to-merge autopilot
 - **Game development**: move files that are already committed into Git LFS, LFS cache clean-up, Unity Smart Merge as an automatic merge driver
-- **Appearance**: colour-blind-safe and high-contrast diff colours
 - **Work networks**: proxy and custom certificate support
 
 Further out: GitLab, Bitbucket and Azure DevOps; Windows notifications and a tray icon; translations. Plans can change, and nothing here has a date.
