@@ -61,7 +61,7 @@ Local and remote branches with their upstream, ahead / behind and last commit. A
 - Select a file for its content, **Blame** (grouped by commit, hover for the summary) and its **History** (follows renames).
 - Right-click a file or folder to open it in your editor, show it in Explorer or open a terminal there.
 
-Code is coloured by language (about 55 languages, picked from the file name or extension) in diffs, file content, blame and the conflict resolver. Colouring happens in the background, so a large file shows as plain text first and fills in; files over 512 KB or 20,000 lines, and lines over 2,000 characters, stay plain. A diff colours each block on its own, so a block that starts inside a long comment or string can be coloured wrongly at first. Turn it off in **Settings › Git › Syntax highlighting**; the colours follow the theme (see [Custom themes](settings.md#custom-themes)).
+Code is coloured by language (about 55 languages, picked from the file name or extension) in diffs, file content, blame and the conflict resolver. Colouring happens in the background, so a large file shows as plain text first and fills in; files over 512 KB or 20,000 lines, and lines over 2,000 characters, stay plain. A diff colours each block on its own, so a block that starts inside a long comment or string can be coloured wrongly at first. Turn it off in **Settings › Git › Syntax highlighting**; pick the colours in **Settings › Appearance › Code colours** (see [Code colours](settings.md#code-colours)).
 
 Diffs everywhere show at most 2 MB per file ("too large", with the size, and an **Open in editor** button). Binary files are detected and shown as such.
 

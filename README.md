@@ -83,7 +83,7 @@ Being worked on next:
 - **Pull requests**: resolve review threads, mark files as viewed, warnings when other pull requests touch the same files
 - **Issues**: issue templates and forms, a multi-repository dashboard on Home, an issue-to-merge autopilot
 - **Game development**: Git LFS tracking, lock-first workflow for binary assets, Unity `.meta` checks and Smart Merge, sparse and partial clones for big repositories
-- **Appearance**: code font and ligatures, colour-blind-safe and high-contrast diff colours
+- **Appearance**: font ligatures, colour-blind-safe and high-contrast diff colours
 - **Work networks**: proxy and custom certificate support
 
 Further out: GitLab, Bitbucket and Azure DevOps; Windows notifications and a tray icon; translations. Plans can change, and nothing here has a date.

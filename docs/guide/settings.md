@@ -70,6 +70,8 @@ Settings marked **Advanced** below sit in a collapsed **Advanced** group in Basi
 | Interface | Basic (new installs) | Basic or Advanced; see [Getting started](getting-started.md#basic-and-advanced-mode). "Reset to defaults" does not change it |
 | Appearance | Dark | Dark, light, or follow the system |
 | Theme family | Obsidian & Copper | Also Midnight Evergreen, Graphite & Blue, Carbon & Teal, Nordic Frost, Ink & Indigo. Each has dark and light |
+| Code colours | From theme | Also GitHub, One, Solarized, Dracula, or one you imported. See [Code colours](#code-colours) |
+| Interface font / Code font | Inter / Geist Mono | Any installed font, or a font file you imported. See [Fonts](#fonts) |
 | Text size, density, animations | | |
 
 ### Custom themes
@@ -95,6 +97,32 @@ Code colours are optional: add `syntax` with `dark` and/or `light`, each with an
   ]
 }
 ```
+
+### Code colours
+
+**Code colours** sets syntax highlighting separately from the theme family. **From theme** uses the family's own colours (its `syntax`, or derived ones). A code colour theme replaces them; each colour is lightened or darkened only where it would be hard to read on the family's background. **Reset to defaults** goes back to From theme and keeps your imports.
+
+**Import code colours** loads your own from a JSON file. **Export current** saves the colours in effect (every key, both variants) in the same format, named "<name> (custom)" (numbered if that name is taken), ready to edit and import back.
+
+Rules: `#RRGGBB` colours only, keys from the list in [Custom themes](#custom-themes), at least one colour per theme, name up to 40 characters and not already used (including "From theme"), at most 20 imported. Colours you leave out are derived from the family's palette, as for a family without `syntax`; a family's own `syntax` colours are not mixed in.
+
+```json
+{
+  "syntaxThemes": [
+    {
+      "name": "My Code Colours",
+      "dark":  { "keyword": "#FF7B72", "string": "#A5D6FF", "comment": "#8B949E" },
+      "light": { "keyword": "#CF222E", "string": "#0A3069" }
+    }
+  ]
+}
+```
+
+### Fonts
+
+**Interface font** sets the font of menus, lists and text; headings keep their title font. **Code font** sets the font of diffs, Files, blame and other code; installed monospace fonts are listed first. The lists show the fonts in your Windows font folders (yours and all users'), including separate weights such as "Segoe UI Semibold". A sample line under each shows the choice. If a chosen font is uninstalled or its file is gone, the default font shows instead (and Settings says so for an imported file).
+
+**Import font file** adds a `.ttf`, `.otf`, `.woff` or `.woff2` file (up to 10 MB, at most 10 files) to both lists, named after the file. GitSimple keeps its own copy; nothing is installed in Windows. Collections (`.ttc`) aren't supported. One file is one font: a variable font covers every weight, other fonts get a computed bold. Removing an imported font sets any setting that used it back to the default. **Reset to defaults** goes back to Inter and Geist Mono and keeps your imports.
 
 ## Updates
 
