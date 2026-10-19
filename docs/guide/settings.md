@@ -113,7 +113,28 @@ Programs GitSimple runs in the repository each time you open the push preview: s
 - Up to 8 checks, each at most once. **Time limit per check:** 1 to 60 minutes; empty means 10.
 - The program is looked up on your `PATH` (`npm.cmd`, `cargo.exe`, ...). Folders inside the repository are skipped, so a repository can't bring its own `npm`. Not found: the check says so and the rest still run. A `pytest` installed only in a virtual environment inside the repository (`.venv`) isn't used; install it where `PATH` finds it.
 - Checks run in the repository's root folder with your environment, minus git's own variables. They also get `CI=1` (test runners don't wait in watch mode), colours off, `GOTOOLCHAIN=local` (a `go.mod` can't download another Go), no MSBuild or dotnet build servers left running, and corepack doesn't write into `package.json`.
-- They are kept in GitSimple's settings, never read from the repository, and they are **not** part of a [settings export](#import-and-export): set them up again on another computer. Saving them doesn't trust them; the push preview asks for that.
+- They are kept in GitSimple's settings and they are **not** part of a [settings export](#import-and-export): set them up again on another computer, or share them through the [team settings file](#team-settings-file). Saving them doesn't trust them; the push preview asks for that.
+
+### Team settings file
+
+A `.gitsimple.json` file committed in the repository root shares four settings with everyone who uses GitSimple in that repository: the **branch name template**, the **commit style** (the commit message helpers), the **pull request title and text templates**, and the **checks before push**. On a fresh clone they apply with no setup beyond one review.
+
+- **Review first.** When the open repository has the file, Settings > Git shows **This repository comes with team settings** with each setting it provides. Nothing from it is used until you press **Review and use them** and agree in the dialog that opens (a Windows dialog shown by the app, like [Review and trust…](advanced-git.md#review-and-trust)). If the file changes later, you are asked again; your own settings apply meanwhile. Git itself is never paused by this file.
+- **What it can say.** Only the four settings, with the same rules as when you type them in Settings: a check is one of the fixed presets with a script name, a template may use only the known placeholders. The file can't name a program or a path. Keys GitSimple doesn't know are listed as ignored and do nothing. A file that can't be read says why in plain words and your own settings apply.
+- **Team values win.** Once accepted, a setting the file provides shows **From the team file** in Settings and is read-only there. In Advanced mode each has **Use my own**, which keeps your own value for that setting in this repository; **Use the team's** goes back. Your own values are kept while the team's apply, so nothing is lost either way.
+- **Share with the team** (Advanced) writes the settings in effect for the open repository into `.gitsimple.json` in its folder, after a preview of the file. Commit it like any other change; GitSimple never writes to git's own configuration. A file you wrote counts as reviewed for you.
+
+```json
+{
+  "version": 1,
+  "branchTemplate": "{type}/{issue}-{slug}",
+  "commitStyle": { "conventional": true, "types": ["feat", "fix", "docs"], "scopes": [], "checks": true, "bodyWidth": 72, "recent": false },
+  "pullRequest": { "title": "{title}", "body": "{commits}\n\n{closes}" },
+  "pushChecks": { "checks": [{ "preset": "npmRun", "script": "test" }], "timeoutMinutes": 10 }
+}
+```
+
+Every section is optional. The presets are `npmRun`, `pnpmRun`, `yarnRun` (with `script`), `cargoTest`, `cargoClippy`, `dotnetTest`, `pytest` and `goTest`. A [settings export](#import-and-export) contains the values in effect, team values included.
 
 ## Network
 

@@ -12,6 +12,7 @@ A GitHub issue tracker for the active repository. The issue views never need a l
 | **Issues** | A list you can group, sort, filter and search (see below) |
 | **Board** | One column per status. Drag a card to change its status |
 | **Sprints** | Active, Upcoming (with a planning pool) and History. Needs a Project with an iteration field. Hidden in Basic mode |
+| **Insights** | A sprint's burndown, the median cycle time of closed issues and the median time to first review and to merge of merged pull requests (see [Insights](#insights)). Hidden in Basic mode |
 
 ### Issues list
 
@@ -51,6 +52,7 @@ Click an issue to open it.
   - The heading counts how many are done. Hover a sub-issue and click **x** to remove it from the list (the issue itself stays).
   - When every sub-issue is closed and the issue is still open, the panel offers **Close #N as completed**. Nothing closes on its own.
 - **Development**: linked branches, pull requests and commits (see [Issues and code together](code.md#issues-and-code-together)).
+- The **progress strip** at the top (Start, Work, Review, Merged) offers the next step: branch, commit, push, **Review my changes** (your own look at the branch before asking others, see [Review your own changes first](code.md#review-your-own-changes-first)), pull request, ready for review, clean up. Each stage can be turned off in Settings, Issues.
 
 Links to other issues of the repository open inside the app; other links open in your browser (https only). GitHub's rendered markdown is shown sanitized. Images in a private repository are fetched with your sign-in (only for the active repository, at most 25 MB each).
 
@@ -103,3 +105,14 @@ GitSimple never creates, renames or deletes Projects, fields or field options.
   - a **rate limit** shows when requests resume;
   - an organization that restricts third-party apps (or requires SAML) means an owner must approve GitSimple;
   - a missing `project` scope tells you to sign in again.
+
+## Insights
+
+**Insights** (Advanced mode; in the Issues group of the sidebar) is one page of numbers about how work flows, computed from the issues and pull requests GitSimple already shows. Nothing is written to GitHub.
+
+- **Burndown** of one sprint: how much of its work was still open at the end of each day, next to the even pace that would finish on the last day. Pick the sprint at the top right; the page opens on the active one. Work is counted in estimate points when the sprint has estimates (issues without one count as 0, and the page says how many), otherwise in issues. **Show the days as a table** lists the same numbers. Only today's issues are counted: an issue taken out of the sprint is not known, so the scope is what the sprint holds now. Without a GitHub Project there is no burndown.
+- **Cycle time**: the median time from created to closed, over the last 30 issues closed as completed (issues closed as duplicate or not planned are left out). Issues closed in the last 90 days are read for it even when the list does not hold them.
+- **Time to first review**: the median time from a pull request being opened to its first review by someone other than its author, over the last 30 merged pull requests that got one.
+- **Time to merge**: the median time from opened to merged, over the last 30 merged pull requests.
+
+Each number has one sentence under it saying what it covers. With fewer than 3 samples the page says **Not enough data** and what it would need. Cycle time counts from when an issue was created: status changes (such as moving to In progress) are not read from GitHub, so a "started to done" time is not shown. The windows (the last 30, the last 90 days) are fixed.

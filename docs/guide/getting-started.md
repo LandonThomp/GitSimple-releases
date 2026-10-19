@@ -90,6 +90,8 @@ It shows, top to bottom:
 
 **Docs** shows the repository's own documentation, read from your clone: the `README.md` in the top folder and the Markdown pages of a `docs` (or `Docs`) folder, up to three folders deep. Open it with **Read the README** on Home, or type "docs" in the command palette (`Ctrl+K`).
 
+The command palette (`Ctrl+K`) also finds issues, pull requests, branches, files and commits as you type; see [Keyboard shortcuts, Search everything](shortcuts.md#search-everything).
+
 - The pages are listed on the left, README first, then the docs folder's pages and each subfolder's.
 - Links between pages, and to headings (`#section`), open in Docs. https links open in your browser. A link to another file in the repository opens Files; links that leave the repository do nothing.
 - Pictures stored in the repository show. Pictures from other websites (such as status badges) and HTML in the page show their description or are left out.

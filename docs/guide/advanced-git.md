@@ -300,3 +300,5 @@ Some standard values get a label in the dialog and in the banner's tooltip, so a
 Only exact values are labelled: anything added to them, such as `git-lfs smudge -- %f; calc`, is shown without a label. A label only explains the setting. These settings still run a program, so you still have to trust them like any other.
 
 Auto-fetch never asks; it skips the repository until you trust it. The push preview always shows the address the push really goes to, and changing a remote's address in the console shows the old and the new one.
+
+Two more things are reviewed the same way, each with a dialog of its own and a separate memory, so a change to one never pauses git: the [checks before a push](code.md#checks-before-a-push) (what they run and the files that decide it) and the repository's [team settings file](settings.md#team-settings-file) (**Use this repository's team settings?** lists each setting the file provides and the keys it has that GitSimple ignores).

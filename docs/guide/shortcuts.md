@@ -2,7 +2,7 @@
 
 # Keyboard shortcuts
 
-`Ctrl+K` opens the command palette from anywhere. The tables below are the default keys; you can change them (see [Change a shortcut](#change-a-shortcut)), and Settings, Keyboard shortcuts always shows the current ones.
+`Ctrl+K` opens the command palette from anywhere: type a word to find issues, pull requests, branches, files and commits of the open repository (and, in Advanced mode, of your other repositories below them), or the name of a view, an action or a repository. See [Search everything](#search-everything). The tables below are the default keys; you can change them (see [Change a shortcut](#change-a-shortcut)), and Settings, Keyboard shortcuts always shows the current ones.
 
 ## Go to a view
 
@@ -62,6 +62,15 @@ Press `G`, then a letter.
 | `S` / `P` / `A` / `L` | Status / priority / assignee / label picker for the open issue |
 | `Ctrl+B` / `Ctrl+I` / `Ctrl+K` | Bold / italic / link, in the issue editor |
 | `Ctrl+Enter` | Submit, in a comment box or the new-issue dialog |
+
+## Search everything
+
+The command palette (`Ctrl+K`) searches the open repository as you type: issues and pull requests by number or title, branches and files by name, and commits by their summary or id. Pick a result with the arrow keys and `Enter`: an issue or pull request opens in its panel, a branch is switched to, a file is shown in Files, a commit in History.
+
+In **Advanced** mode:
+
+- **Prefixes** narrow the search to one kind: `#` issues and pull requests, `@` branches, `/` files, `:` commits (`/button`, `:typo`).
+- **Other repositories** are listed below the open one, grouped by kind and repository. Their issues and pull requests are the ones Home shows (assigned to you, yours, waiting for your review); their branches, files and commits come from their local clones. Picking one switches to that repository and opens it. A clone you haven't reviewed and trusted yet is not read; it is listed under "Repositories not searched".
 
 ## Change a shortcut
 

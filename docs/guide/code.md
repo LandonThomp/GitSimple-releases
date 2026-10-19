@@ -274,14 +274,15 @@ The issue panel shows where the issue is (**Start**, **Work**, **Review**, **Mer
 | Stage | Next step offered | What it does |
 | --- | --- | --- |
 | Start | **Start work** (or **Create branch** when Start work is off) | Opens Create branch: branch from the template, checked out, and with Start work the issue moves to its status and is assigned to you |
-| Work | **Switch to** the branch, **Commit changes**, **Push** / **Publish branch**, then **Create pull request** | The usual Changes view, push preview and Create pull request dialog. With "New pull requests start as drafts" the pull request is a draft |
+| Work | **Switch to** the branch, **Commit changes**, **Push** / **Publish branch**, **Review my changes**, then **Create pull request** | The usual Changes view, push preview and Create pull request dialog. **Review my changes** opens your branch the way a reviewer will see it (see [Review your own changes first](#review-your-own-changes-first)); once you finish it, the next step is the pull request. With "New pull requests start as drafts" the pull request is a draft |
 | Review | **Ready for review** | A dialog lists what changes, then: marks the draft ready, asks the default reviewers for a review (added to those already asked) and moves the issue to the review status. Afterwards the button opens the pull request |
 | Merged | **Clean up** | One preview: closes the issue as completed (only when GitHub didn't), deletes the branch on GitHub, and in your clone switches to the base branch, deletes the local branch and pulls the base branch (fast-forward only) |
 
 - Draft pull requests can't be opened before the branch has a commit (GitHub refuses an empty pull request), so the draft is created at **Create pull request**, not at Start work.
 - **Clean up** only touches what is safe: a branch with commits that are not in the merged pull request is kept, a clone with uncommitted changes stays on its branch, and an issue that doesn't list the pull request in its Development section is not closed. The preview says what it leaves alone and why, and Windows asks once more before anything is deleted.
 - Home's Next step offers **Clean up after #N** too, while the merged branch is still checked out.
-- The statuses come from the workspace's own statuses (project or label mode), and each stage can be turned off in Settings, Issues, **From pull request to merge**.
+- The statuses come from the workspace's own statuses (project or label mode), and each stage can be turned off in Settings, Issues, **From pull request to merge** (**Review my changes** too: with it off, Push goes straight to Create pull request).
+- After the review is finished, and while the pull request is open, a quiet **Review my changes** button next to the main one opens the review again (new commits ask for another look).
 
 ### Commits that mention issues
 
@@ -329,6 +330,16 @@ An open pull request's detail warns when other open pull requests change some of
 - GitHub lists 100 files per pull request: when another pull request changes more, the warning says an overlap with it may be missing. Only the 100 most recently updated open pull requests are compared. When nothing was found but not everything could be compared, a note says so.
 - A stacked branch (made from another feature branch) is compared with the default branch, so the parent branch's pull request shows up too. A pull request you opened from a fork isn't recognised as the branch's own.
 - It works on a GitHub Enterprise Server too, through that server's sign-in.
+
+### Review your own changes first
+
+**Review my changes** (the issue panel's stage before Create pull request) shows your branch the way a reviewer will see it: every file it changes against the base branch (`origin/<default branch>`), as one list of diffs like a pull request's Files changed.
+
+- **Viewed** in a file's header folds it and counts in the toolbar, like on a pull request. These marks are yours only: they are kept on this computer, in the app's data folder, never in the repository and never sent to GitHub.
+- The **checklist** on the right has four fixed items (tests, docs, no leftover debug code, no secrets) plus one item per heading of the repository's pull request template (`.github/pull_request_template.md` and the other places GitHub looks). What you tick goes into the pull request's description as a task list when you create it.
+- **Notes to self** and a note under each file (Advanced) stay on this computer. Once the branch has an open pull request, a file's note offers **Turn into a review comment**: it joins your pending review on the file's first changed line, and you submit the review on the pull request as usual.
+- **Done, create pull request** marks the review finished for the current commit and opens Create pull request. New commits afterwards bring the stage back; **Review again** reopens a finished review.
+- **Clean up** after the merge removes the branch's notes and marks together with the branch.
 
 ### Review a pull request
 
