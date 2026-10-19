@@ -68,7 +68,6 @@ One page per topic:
 ## Planned
 
 - **More hosts**: GitLab in a later release (issues, merge requests, CI status, on the host boundary 0.6.0 put in place), then Azure DevOps and Bitbucket
-  - Plan: [plans/gitlab.md](plans/gitlab.md)
 - **Translations**: the first languages, once error and preview messages from the app's core can be translated too (everything else already can)
 - **GitHub Enterprise**: notifications from an Enterprise Server in the Inbox, GitHub Projects mode and CI job logs on a server
 - **Code viewer**: an overlay mode for image diffs
