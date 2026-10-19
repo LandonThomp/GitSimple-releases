@@ -49,6 +49,8 @@ Use **Add a repository**, then either:
 - **Local folder**: a clone that is already on your PC, or
 - **From GitHub**: pick one of your repositories, then **Clone to folder…**.
 
+While a clone runs, the dialog shows its progress and **Stop**. Stop ends git and Git LFS and removes what the clone wrote: the repository's folder when the clone created it, or the contents of the empty folder you cloned into (that folder itself stays). A stopped clone isn't added. A folder that already had files in it is refused before the clone starts, so it is never touched. If GitSimple closes in the middle of a clone, it removes the half-written folder it created the next time it starts.
+
 A repository added without a clone still has its issue views. The Code views show **Clone this repository / Locate existing clone** until there is one.
 
 ### Switching from the taskbar

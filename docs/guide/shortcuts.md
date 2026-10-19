@@ -48,6 +48,7 @@ Press `G`, then a letter.
 | `Ctrl+G` | Go to line (in a diff, the new file's line number) |
 | `F7` / `Shift+F7` | Next / previous change in a diff |
 | `Ctrl+L` | Clear the Console's screen |
+| `Ctrl+P` | Find a file by name (in Files) |
 
 ## Issues
 

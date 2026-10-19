@@ -94,6 +94,7 @@ In Changes, select a conflicted file.
 - **Mark resolved** writes the result and stages it. CRLF and a missing final newline are kept. It is refused while a complete conflict block is left.
 - **Open in merge tool** starts the program chosen in Settings, Git (VS Code, P4Merge, KDiff3, Beyond Compare or Meld are offered when found) with temp files, no shell. The button names the tool, for example **Open in VS Code**.
 - **Unity files:** with Unity Smart Merge set in Settings, Git, scenes, prefabs and other Unity YAML assets (`.unity`, `.prefab`, `.asset`, `.mat`, `.controller`, `.anim` and more) open in UnityYAMLMerge instead (**Open in UnityYAMLMerge**). It merges what it can understand and hands the rest to the fallback tool in Unity's `mergespecfile.txt`. If conflict blocks are still left when it closes, the resolver says so and shows them, so you can finish by hand. Other files keep the general merge tool. The scene must be saved as text (Unity's default, Force Text); binary assets only get the whole-file choices.
+- **Unity `.meta` files with two IDs:** when the two sides give the asset different IDs (GUIDs), the resolver shows **Two IDs for one asset** with how many files use each and which one to keep. See [A .meta conflict with two IDs](unity.md#a-meta-conflict-with-two-ids).
 
 ### Which side is which
 
@@ -171,6 +172,8 @@ For a repository cloned with the big-repository options (see [Cloning a big repo
 - Skipped LFS files stay pointers only until git updates them: switching branches or pulling downloads the LFS files of the files it changes, as usual.
 
 **Download the full history** shows progress and can be stopped. Changing folders and downloading LFS files show progress but can't be stopped, because they rewrite the files in your working copy while they download; they stop at the network time limit (Settings, Git). In a partial clone, GitSimple's GitHub sign-in is also used when git downloads older file contents for a view.
+
+**Faster status.** In a repository with very many files, checking for changes can take seconds. When it does, Changes offers **Make it faster**, which turns on [Faster status for big repositories](settings.md#all-repositories-or-this-repository) for that repository: git watches the folder instead of reading every file each time.
 
 Partial clones and sparse checkouts make git record a few settings of its own in the repository (for example `remote.origin.promisor` and `core.sparseCheckout`). These don't run programs, so they don't trigger **Review and trust…**. GitSimple itself still never edits your git configuration.
 

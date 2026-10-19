@@ -68,10 +68,10 @@ One page per topic:
 ## Planned
 
 - **More hosts**: GitLab in a later release (issues, merge requests, CI status, on the host boundary 0.6.0 put in place), then Azure DevOps and Bitbucket
-- **Translations**: the first languages, once error and preview messages from the app's core can be translated too (everything else already can)
+- **Several GitHub accounts**: sign in with more than one github.com account (work and personal, say) and choose which one each repository uses, together with the other hosts
+- **Perforce workspaces**: a workspace whose code is on a Perforce server (issues stay on GitHub), plus the tracker features still missing (Severity, Component, Backlog)
+- **Translations**: the first languages. Everything the app shows can be translated now, including its error and preview messages; what's left is choosing languages and reviewers. Native dialogs, Windows notifications and the tray menu stay English until then
 - **GitHub Enterprise**: notifications from an Enterprise Server in the Inbox, GitHub Projects mode and CI job logs on a server
-- **Code viewer**: an overlay mode for image diffs
-- **Issues**: an issue-to-merge autopilot
 
 Plans can change, and nothing here has a date.
 <!-- roadmap:end -->

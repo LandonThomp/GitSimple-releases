@@ -27,13 +27,21 @@ Settings marked **Advanced** below sit in a collapsed **Advanced** group in Basi
 | Hide the issue key at the start of titles · *Advanced* | Off | Shows "GS-42: Fix it" as "Fix it" (only the issue's own key) |
 | Allow editing sprints · *Advanced* | Off | Create, rename and re-date sprints. GitHub replaces the whole sprint list on every edit; GitSimple always sends all sprints so none is lost |
 | Start work when I create a branch for an issue · *Advanced* | Off | Moves the issue to a chosen status and assigns you |
+| New pull requests start as drafts · *Advanced* | Off | Create pull request starts with Draft on; otherwise it starts with the reviewers below |
+| Offer "Ready for review" · *Advanced* | On | The issue panel's Ready for review: marks the draft ready, asks the reviewers below and moves the issue to the chosen status (or leaves the status) |
+| Reviewers to ask · *Advanced* | None | User names, comma separated, up to 15; added to the reviewers already asked |
+| Offer "Clean up" after the merge · *Advanced* | On | One previewed step after a merge: close the issue as completed if GitHub didn't, delete the branch on GitHub and here, switch to the base branch and pull it. See [From issue to merge](code.md#from-issue-to-merge) |
 | Refresh interval · *Advanced* | 60 seconds | How often issues refresh while the window is focused; 0 = off. After a rate limit the app waits until it resets |
 
 ## Git
 
 ### All repositories or this repository
 
-**Applies to** at the top switches between **All repositories** (the settings below) and **This repository** (the repository open now). In This repository you can give that repository its own pull strategy, automatic fetch interval, git hooks switch, rebase defaults (autostash, autosquash), default reset mode, commit message template and branch name template. Each row says **Same as all repositories** until you change it; then it says **Changed for this repository** and has **Reset**, which goes back to the all-repositories value. **Save** stores them with the repository; **Reset all to all repositories** clears every one. A changed setting applies only to that repository, and a later change in All repositories doesn't touch it. When the open repository has its own settings, All repositories says how many, with a link to them. They are part of a [settings export](#import-and-export).
+**Applies to** at the top switches between **All repositories** (the settings below) and **This repository** (the repository open now). In This repository you can give that repository its own editor, faster status, pull strategy, automatic fetch interval, git hooks switch, rebase defaults (autostash, autosquash), default reset mode, commit message template and branch name template. Each row says **Same as all repositories** until you change it; then it says **Changed for this repository** and has **Reset**, which goes back to the all-repositories value. **Save** stores them with the repository; **Reset all to all repositories** clears every one. A changed setting applies only to that repository, and a later change in All repositories doesn't touch it. When the open repository has its own settings, All repositories says how many, with a link to them. They are part of a [settings export](#import-and-export), except the editor (a program on this computer) and faster status (it depends on this computer's git and disk).
+
+The repository's **Editor** is chosen like the app-wide one: **Browse** (only the supported editors are accepted) or one of the editors found on this computer; a path can't be typed in. Browse and a found editor save it at once; **Reset** goes back to the editor for all repositories when you save. Use it for example to open a Unity project in Rider or Visual Studio while other repositories keep VS Code.
+
+**Faster status for big repositories** (This repository, Advanced) makes git watch the repository's folder for changes (file system monitor) and remember folders without new files (untracked cache), so checking for changes doesn't read every file again. GitSimple passes this to its own git commands only; nothing is written to the repository's settings, and your terminal is unaffected. It needs Git 2.37 or later and a folder on this computer, not a network drive; the row says so when that isn't the case. When status is slow (about 1.5 seconds or more, three times running), **Changes** offers it with **Make it faster**; if status is still slow with it on, Changes says so, since it doesn't help on every disk. **Not now** hides the offer until GitSimple restarts. If you set `core.fsmonitor` to `true` in the repository yourself, GitSimple uses the watcher there too.
 
 ### Everyday
 
@@ -42,7 +50,7 @@ Settings marked **Advanced** below sit in a collapsed **Advanced** group in Basi
 | Use GitSimple's GitHub sign-in for git | On | github.com https remotes use your GitSimple sign-in (passed over a pipe, never in arguments, environment or files). Off: Git Credential Manager and your own helpers. Other hosts always use yours |
 | Fetch automatically | 5 minutes | On window focus and every N minutes; 0 = off. Also while minimised or in the tray when **New commits on the upstream** (Notifications) is on |
 | Default clone folder | `%USERPROFILE%\source\repos` | Where **Clone to folder…** starts |
-| Editor | First one found | What **Open in editor** starts: VS Code, VS Code Insiders, Cursor, VSCodium, Windsurf, Sublime Text or Notepad++. Pick with Browse or from the editors found; a path can't be typed in. Clear returns to "first one found" |
+| Editor | First one found | What **Open in editor** starts: VS Code, VS Code Insiders, Cursor, VSCodium, Windsurf, Sublime Text, Notepad++, JetBrains Rider or Visual Studio (Rider and Visual Studio are found in their versioned install folders, newest first; Visual Studio opens a file without jumping to a line). A repository can have its own editor under **This repository**. Pick with Browse or from the editors found; a path can't be typed in. Clear returns to "first one found" |
 | Diff layout / wrap long lines | Unified, off | Also switchable in the diff header |
 | Syntax highlighting | On | Colours code by language in diffs, Files (content and blame) and the conflict resolver. Files over 512 KB or 20,000 lines are always shown plain; turn it off on a slow machine |
 
@@ -68,6 +76,7 @@ Signing is not a GitSimple setting: it follows `commit.gpgsign` in your git conf
 | Commits that belong to an issue *(per workspace)* | Key in front of the summary | None, `Refs #N`, `Fixes #N`, or the key in front of the summary; live preview |
 | Commit message helpers *(per workspace)* | All off | **Conventional Commits** (a type and scope picker; edit the types, `feat, fix, docs, ...` by default, and suggested scopes), **Check the message format** (soft hints; wrap width 72), **Recent summaries**. See [Changes](code.md#changes) |
 | Safety net rules *(per workspace)* | None | Your own checks before a commit and a push; see [Safety net rules](#safety-net-rules) |
+| Checks before push *(per workspace)* | None | Your tests or linters, run in the push preview; see [Checks before push](#checks-before-push) |
 | Pull request title / body templates *(per workspace)* | `{title}` / `{commits}\n\n{closes}` | Placeholders `{title}`, `{issue}`, `{key}`, `{branch}`; body also `{commits}`, `{closes}`; live preview |
 | Merge tool | None | Pick with Browse or from the tools found: VS Code, P4Merge, KDiff3, Beyond Compare, Meld, WinMerge, TortoiseGitMerge. A path can't be typed in |
 | Unity Smart Merge | None | UnityYAMLMerge for Unity scenes, prefabs and other YAML assets (`.unity`, `.prefab`, `.asset`, `.mat`, `.controller`, `.anim` and more). Pick with Browse (`UnityYAMLMerge.exe` only) or from the Unity Editors installed with Unity Hub: the repository's Unity version comes first (from `ProjectSettings/ProjectVersion.txt`), then the newest. Other files keep the merge tool above; with this empty, Unity files use it too |
@@ -87,6 +96,24 @@ Each repository can add its own checks to the [safety net](code.md#safety-net-be
 - **Flag files from N MB:** staged or pushed files of at least this size get a warning (1 to 49 MB). GitHub itself warns from 50 MB and refuses 100 MB; empty means only those limits.
 
 Findings of secret and file patterns can be dismissed like the built-in ones (**Not a secret**, **Don't check this file**); the size warning can't be dismissed, like the big-file warning. A repository's rules are part of a [settings export](#import-and-export).
+
+### Checks before push
+
+Programs GitSimple runs in the repository each time you open the push preview: see [Checks before a push](code.md#checks-before-a-push). Pick each check from a fixed list. There is no free command line and no shell:
+
+| Check | Runs |
+|---|---|
+| npm run, pnpm run, yarn run | `npm run <script>` (and the same for pnpm and yarn) with the script name you type: letters, digits and `: _ . -`, starting with a letter or digit |
+| cargo test | `cargo test` |
+| cargo clippy | `cargo clippy --all-targets -- -D warnings` (a warning fails the check) |
+| dotnet test | `dotnet test --nologo` |
+| pytest | `pytest` |
+| go test | `go test ./...` |
+
+- Up to 8 checks, each at most once. **Time limit per check:** 1 to 60 minutes; empty means 10.
+- The program is looked up on your `PATH` (`npm.cmd`, `cargo.exe`, ...). Folders inside the repository are skipped, so a repository can't bring its own `npm`. Not found: the check says so and the rest still run. A `pytest` installed only in a virtual environment inside the repository (`.venv`) isn't used; install it where `PATH` finds it.
+- Checks run in the repository's root folder with your environment, minus git's own variables. They also get `CI=1` (test runners don't wait in watch mode), colours off, `GOTOOLCHAIN=local` (a `go.mod` can't download another Go), no MSBuild or dotnet build servers left running, and corepack doesn't write into `package.json`.
+- They are kept in GitSimple's settings, never read from the repository, and they are **not** part of a [settings export](#import-and-export): set them up again on another computer. Saving them doesn't trust them; the push preview asks for that.
 
 ## Network
 
@@ -259,6 +286,7 @@ What is never in the file:
 - Commit identities (names and emails) and which identity each repository commits as. An import leaves the ones on this computer as they are.
 - Imported font files. A setting that uses one goes back to the default font; import the font file there and choose it again.
 - Settings > Network and the GitHub Enterprise Servers you added.
+- A repository's [checks before push](#checks-before-push), and which checks you trusted: they run programs, so they stay on the computer where you set them up.
 - Local folders, unless you switch on **Include local folders** (where each repository and new clones are on this computer). Leave it off when you share the file with others.
 
 **Import settings…** reads such a file and shows what would change, part by part: git settings, repositories, saved issue views, keyboard shortcuts, appearance, and updates and notifications, with the names of the settings that change. Parts that are already the same are greyed out. Untick what you don't want, then **Import**. Repositories that aren't here yet are added (from their local folder when the file has one and it holds that repository, otherwise without a folder; choose its local folder later in Settings > Workspaces). Only folders on a drive letter are used: network shares in a file are refused. A repository on a GitHub Enterprise Server you haven't added in Settings > Account is skipped.

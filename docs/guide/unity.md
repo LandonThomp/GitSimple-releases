@@ -35,7 +35,17 @@ One click stages at most 500 files (fewer when the paths are very long); when th
 
 On Windows a file renamed only in upper and lower case is the same file, so such a rename of an asset or its `.meta` is not reported as a missing or left-over `.meta`.
 
-The reference check looks at Unity's text files (scenes, prefabs, materials, animations, `.asset` files, the build settings and similar). It can only see references in projects saved as text (see below), and not inside files stored in Git LFS. In a very large change some checks may be cut short; the box says so.
+The reference check looks at Unity's text files (scenes, prefabs, materials, animations, `.asset` files, the build settings and similar). It can only see references in projects saved as text (see below). Files stored in Git LFS are read from the LFS store on your computer (up to 200 files and 64 MB in all; files over 8 MB, usually baked lighting or terrain data, are skipped). One that isn't downloaded can't be checked, and the box then says the check is incomplete. In a very large change some checks may be cut short; the box says so too.
+
+## A .meta conflict with two IDs
+
+When the same asset was added on two branches separately (two people imported the same texture, say), each Unity gave it its own ID (GUID), and merging stops on its `.meta` file. Scenes, prefabs and materials find an asset by this ID, so this isn't something to merge line by line: only one ID can stay. The [conflict resolver](advanced-git.md#conflict-resolver) then shows **Two IDs for one asset**:
+
+- both IDs, with how many files use each and the first few of them (the same search as the reference check above, including files stored in Git LFS);
+- which one to keep: the ID other files use. If both are used, keep the one more files use, then pick the asset again in Unity where a reference shows as missing;
+- **Use your whole file** / **Use their whole file** to keep one. The import settings of that side come along; change them in Unity afterwards if needed.
+
+When both sides have the same ID and only import settings differ, it is a normal text conflict. `.meta` files never go to UnityYAMLMerge: Unity's Smart Merge documents nothing for them, and it can't choose an ID either.
 
 ## Project settings
 
