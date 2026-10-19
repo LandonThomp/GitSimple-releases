@@ -29,6 +29,10 @@ Press `G`, then a letter.
 | `K` | Board |
 | `R` | Sprints *(Advanced)* |
 
+| `G` then | Other |
+| --- | --- |
+| `N` | [Inbox](inbox.md) (GitHub notifications) |
+
 ## Code
 
 | Keys | Action |

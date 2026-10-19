@@ -18,11 +18,21 @@ Four lists: **Conflicted**, **Ready to commit** (staged), **Changes** and **New 
 
 - a summary (a hint appears past 72 characters) and an optional description;
 - an optional issue key (the workspace's prefix, `#` or `GS-`, is added);
+- optional **co-authors**: pick people who worked on it with you from the recent authors of the repository and its GitHub users (their GitHub noreply address, so GitHub credits their account; for a repository on a GitHub Enterprise Server, only the recent authors for now, and the picker says so), or type `Name <email>` for anyone else. Each gets a `Co-authored-by:` line at the end of the message (no need to type those lines). You are never added as your own co-author, and the same person is added once;
 - **Commit**. With nothing staged the button reads **Stage all and commit**.
 
-**Add to last commit (amend)** shows what it replaces and warns when that commit is already pushed.
+**Add to last commit (amend)** shows what it replaces and warns when that commit is already pushed. While amending, the picker shows the last commit's co-authors (not the description), so you can add or remove them; they are written back once. Co-authors picked for your next commit come back when you turn amend off. Co-authors are read from the message's final block of `Key: value` lines only; a line mixed in with other text stays in the description.
 
-**Drafts:** an unfinished summary and description are kept per repository and branch, on this computer. They come back when you return to Changes, switch back to the branch or restart GitSimple, and after a commit that failed (a hook rejected it, say). A successful commit clears the draft. A message that looks like it holds a secret (a token, a password, a URL with a password in it; the same rule as the [console](advanced-git.md#the-git-console)'s history) is never saved. While amending, the text comes from the last commit and isn't saved as a draft.
+**Who commits:** under the message the box shows the name and email git will use (hover to see which configuration each comes from: this repository, your global config, ...). When the repository has an identity chosen under **Settings > Workspaces > Commit as** and git would use another one, the box says so; **Apply…** shows the change to the repository's `.git/config` (old and new `user.name` / `user.email`) and writes it when you confirm. Nothing else in your git configuration is changed. See [Identities](settings.md#identities).
+
+**Signed commits:** GitSimple follows your git configuration. With `commit.gpgsign` on, the box says **Commits will be signed (SSH)** (or GPG, X.509) and git signs as usual with `gpg.format`, `user.signingkey` and `gpg.program` / `gpg.ssh.program`. There is no switch in GitSimple. git runs without a console window, so a signer can't ask for a passphrase in a terminal:
+
+- **SSH keys** need ssh-agent (Windows: start the "OpenSSH Authentication Agent" service, then `ssh-add` your key once), or a key without a passphrase;
+- **GPG keys** need a graphical pinentry (Gpg4win's), or a key gpg-agent has already unlocked.
+
+When signing fails the commit isn't made and the error says why, with these hints. A signer that hangs is stopped after the network time limit (Settings > Git > Advanced; it also applies to commands that may run hooks).
+
+**Drafts:** an unfinished summary, description and the co-authors picked are kept per repository and branch, on this computer. They come back when you return to Changes, switch back to the branch or restart GitSimple, and after a commit that failed (a hook rejected it, say). A successful commit clears the draft. A message that looks like it holds a secret (a token, a password, a URL with a password in it; the same rule as the [console](advanced-git.md#the-git-console)'s history) is never saved. While amending, the text comes from the last commit and isn't saved as a draft.
 
 **Locks:** with Git LFS installed, changed files show a padlock when they are locked, and a warning names whoever else locked a file you changed. See [Git LFS](advanced-git.md#locks).
 
@@ -66,11 +76,12 @@ Pull, push and anything that can lose work (discard, delete branch, merge, amend
 
 ### Safety net before a push
 
-The push preview (and the force push preview) runs the [commit safety net](#safety-net-before-a-commit) again, over the commits the push sends: the commits that are neither on your remote branch nor on any other remote branch. Commits you merged in from `origin/main`, say, are already on the server and aren't checked again. That catches what the commit check never saw: a commit made with `git commit` in a terminal or another tool, or a warning you dismissed and committed anyway.
+The push preview (and the force push preview, and the preview of [moving files into LFS in the whole branch](advanced-git.md#moving-committed-files-into-lfs), which force-pushes) runs the [commit safety net](#safety-net-before-a-commit) again, over the commits the push sends: the commits that are neither on your remote branch nor on any other remote branch. Commits you merged in from `origin/main`, say, are already on the server and aren't checked again. That catches what the commit check never saw: a commit made with `git commit` in a terminal or another tool, or a warning you dismissed and committed anyway.
 
 - **Check before you push** lists the findings under the commit they came from (its short id and summary): conflict markers, possible secrets and keystore files, and files of 50 MB or more (red at 100 MB, where GitHub refuses the push).
 - The rules are the same as at commit time, and only the lines each commit adds are checked, so something already on the remote isn't reported again. What the push sends is read up to 16 MB (the first 1000 commits); if there is more, the preview says part of it wasn't checked, and if the check fails it says so. A merge commit's own changes aren't checked, only the commits it brings in. In a [partial clone](advanced-git.md#folders-big-repositories) the check never downloads anything: if it needs file contents that aren't on your computer, it skips them and says so (with Git older than 2.44 it skips the added lines in every partial clone).
 - **Not a secret** and **Don't check this file** work as at commit time and are shared with it.
+- **GitHub Actions workflows:** when the commits change a file under `.github/workflows/` and git pushes with GitSimple's sign-in (an https remote, with **Use GitSimple's GitHub sign-in for git** on), the preview warns that GitHub will refuse the push: GitHub only accepts workflow changes from a sign-in with the "workflow" permission, which GitSimple doesn't ask for. Push those commits from a terminal, or turn that setting off in Settings > Git so git uses your own credentials (Git Credential Manager). A refused push says the same. A GitHub CLI sign-in with the permission (`gh auth refresh -s workflow`) also works while GitSimple has no sign-in of its own.
 - It only warns: the push button stays enabled. A secret stays in the history even if a later commit deletes it, so revoke the key and fix the commit (amend, or rewrite it in [History](advanced-git.md#history-actions)) before you push. A file over 100 MB has to come out of the commits too; see [Big files](advanced-git.md#big-files-before-a-push).
 
 ## Branches
@@ -88,11 +99,12 @@ Local and remote branches with their upstream, ahead / behind and last commit. A
 
 - A paged commit list with a lane graph, branches and tags.
 - Filters: text, author, path, all branches.
+- A badge on a signed commit's details: **Signed** (verified), **Signed, key not trusted**, **Signed, expired**, **Signed, key revoked**, **Bad signature**, or **Signed, unverified** when git can't check it (no key, no gpg; for SSH signatures set `gpg.ssh.allowedSignersFile` to verify them). Hover it for the signer and key. The commit list itself never checks signatures (that would start gpg for every row).
 - Commit details with per-file diffs. Drag the border between the commit list and the details to make them wider or narrower, and the borders under the commit message and the file list to make those taller or shorter (or focus a border and use the arrow keys); the sizes are remembered.
 - **Copy SHA**, **Create branch here**, and the [advanced actions](advanced-git.md#history-actions) (right-click a commit, or its "…" menu).
 - Right-click a commit for **Open terminal here** and **Reveal repository in Explorer** (the repository folder). Right-click a file of the commit to open the file as it is in your working folder (not as it was in that commit), show it in Explorer or open a terminal in its folder.
 - A commit's parents are links: a click goes to that commit, even when the list hasn't loaded it yet (with filters on, it opens directly and the filters stay).
-- Above a file's diff, **Blame at this commit** shows the file's blame as this commit left it and **Blame parent** as it was just before (under its old name after a rename). Click a commit id in that blame to open the commit, and blame again from there to walk back through the file's history.
+- Above a file's diff, **View file at this commit** opens the whole file as this commit left it (read-only, labelled with the commit), **Blame at this commit** shows the file's blame as this commit left it and **Blame parent** as it was just before (under its old name after a rename). Click a commit id in that blame to open the commit, and blame again from there to walk back through the file's history.
 
 ### Go to a commit
 
@@ -115,7 +127,21 @@ Two modes, as in git: **A...B** (the default) shows what the compare side change
 ## Files
 
 - The tree at HEAD, loaded folder by folder, with status badges for changed files.
-- Select a file for its content, **Blame** (grouped by commit, hover for the summary; click a commit id to [open it in History](#go-to-a-commit)) and its **History** (follows renames).
+- Select a file for its content, **Blame** (grouped by commit, hover for the summary; click a commit id to [open it in History](#go-to-a-commit)) and its **History** (see below).
+
+### A file's history
+
+The **History** tab lists the commits that changed the file, newest first, and follows it across renames: a commit from before a rename shows the file's name in that commit ("as old/name.ts"), and the rename itself says "renamed from ...". Click a commit to see what it changed in the file.
+
+- **View file at this commit** opens the whole file as that commit left it, read-only, with the commit id in its header (`At 1a2b3c4 · Read-only`). Close it to get back to the working tree. It isn't offered for the commit that deleted the file.
+- **Compare two versions:** tick the boxes of two commits and click **Compare these versions**. The diff shows the file at the older commit against the file at the newer one, as one file even when it was renamed in between, as long as the two versions are still similar (git's rename detection: about half the content the same). A file that was renamed and largely rewritten shows as deleted and added instead. A third tick replaces the first one; **Back to the commit** returns to the single-commit diff.
+- Both work in Basic and Advanced mode.
+
+Limits:
+
+- Renames are followed along one line of history (git's `--follow`). A rename made on a branch that was merged in may not be followed past the merge, so commits from before that rename can be missing.
+- A merge commit is listed when it changed the file compared with its first parent, and its diff is against that parent.
+- Files over 2 MB aren't shown in the file view or the diff (as everywhere); the list reaches back 10,000 commits.
 - Right-click a file or folder to open it in your editor, show it in Explorer or open a terminal there.
 
 Code is coloured by language (about 55 languages, picked from the file name or extension) in diffs, file content, blame and the conflict resolver. Colouring happens in the background, so a large file shows as plain text first and fills in; files over 512 KB or 20,000 lines, and lines over 2,000 characters, stay plain. A diff colours each block on its own, so a block that starts inside a long comment or string can be coloured wrongly at first. Turn it off in **Settings › Git › Syntax highlighting**; pick the colours in **Settings › Appearance › Code colours** (see [Code colours](settings.md#code-colours)).
@@ -195,7 +221,27 @@ In the issue panel click the branch icon (or press `B`, or use the palette).
 
 - edit the title and text (a change made on GitHub meanwhile is offered as reload or overwrite);
 - head / base, conversation and reviews, files changed (see [Reading a diff](#reading-a-diff) for whitespace, hidden lines and find), commits, checks, labels, assignees, requested reviewers, linked issues;
-- add comments.
+- add comments (**Attach on GitHub** works as in the [issue panel](issues.md#the-issue-panel): it copies your comment and opens the pull request on GitHub, where you paste it and drag the file in);
+- react to the description, comments and review comments (the same reactions as in the [issue panel](issues.md#the-issue-panel); not on your pending review comments, GitHub allows that only once the review is submitted).
+
+### Checks: logs and re-runs
+
+The **Checks** tab lists the checks of the latest commit. For a job that ran on GitHub Actions, and when you can push to the repository, a row also has:
+
+- **Show log**: the job's log in the app, without color codes, scrolled to the end (where a failure is). A long log shows its last 5,000 lines first (**Show all lines** for the rest); a log over 25 MB shows its end. **Copy** copies what was loaded. Logs are there once a job has finished; GitHub deletes them after a while (90 days unless the repository says otherwise), and then the log says so.
+- **Re-run** (the circular arrow): this job, the failed jobs of the workflow run (when the job failed) or all of its jobs. GitSimple asks first, because a re-run uses your GitHub Actions minutes. If GitHub refuses, for example because a run from a fork waits for a maintainer's approval, its reason is shown; approve the run on GitHub, then try again.
+
+Other checks (other apps, commit statuses) open on GitHub with the arrow button. On a GitHub Enterprise Server re-runs work, but logs can't be shown in the app yet, so **Show log** isn't there: open the log on the server.
+
+### Other pull requests that change the same files
+
+An open pull request's detail warns when other open pull requests change some of the same files, with each one's number, title and shared files (click one to open it). The **Create pull request** dialog shows the same warning for the branch you are about to propose, and Home's **Status** card has a **Same files** line for the branch you are on (not the default branch). Use it to talk to the other author before you both edit the same file.
+
+- "The same files" means the same path; whether the changed lines collide isn't checked. A renamed file counts with its old and its new name.
+- A branch is compared from where it forked from the default branch (`origin/<default>`, else the local one), so commits on the default branch since then don't count. The branch's own pull request is left out.
+- GitHub lists 100 files per pull request: when another pull request changes more, the warning says an overlap with it may be missing. Only the 100 most recently updated open pull requests are compared. When nothing was found but not everything could be compared, a note says so.
+- A stacked branch (made from another feature branch) is compared with the default branch, so the parent branch's pull request shows up too. A pull request you opened from a fork isn't recognised as the branch's own.
+- It works on a GitHub Enterprise Server too, through that server's sign-in.
 
 ### Review a pull request
 

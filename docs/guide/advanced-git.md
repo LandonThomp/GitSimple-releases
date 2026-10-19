@@ -14,6 +14,8 @@ Everything that can lose work:
 
 Previews belong to the GitHub login that made them. Actions that discard data, rewrite or delete branches, or change a remote also ask in a Windows dialog right before they run.
 
+Before an action that could lose uncommitted work runs, and only when you have uncommitted work, GitSimple saves it in a **snapshot** (see [Undo](#undo)): discard, hard reset (and Undo with Hard), pull, merge, abort merge, rebase, skip or abort of an operation in progress, delete untracked files, and restoring a snapshot. A dropped or cleared stash is kept the same way. The preview says so, and the result message confirms it.
+
 ## Stashes
 
 *Advanced mode.* Put changes aside and bring them back later.
@@ -85,6 +87,14 @@ The sides are named after the operation, with git's word in brackets in the pane
 | Revert | Your version | Reverted change |
 | Stash apply | Your version | Stash |
 
+### Before and after
+
+Merge, rebase, reset (and Undo) and force push previews show the branch **before** and **after**, side by side, newest commit first:
+
+- commits the operation creates (a merge commit, rebased copies) are marked **new**;
+- commits the branch loses are struck through (they stay in the reflog for a while; for a force push, they are what the remote branch loses);
+- a merge also says what git expects: a fast-forward, a merge commit without conflicts, or the files that will conflict. The prediction looks at the commits only, not at your uncommitted changes, and needs git 2.38 or newer.
+
 > **Rebase is the odd one out:** git calls the branch you rebase onto "ours" and your own commit "theirs". GitSimple names them for what they are.
 
 ## Undo
@@ -95,6 +105,16 @@ The sides are named after the operation, with git's word in brackets in the pane
 - Undo is a preview of a reset to the entry before it, with the same loss listing as reset.
 - Branch switches and the steps inside a rebase are marked as not undoable this way.
 - It never resets by itself, and in a text box `Ctrl+Z` stays the normal text undo.
+
+### Snapshots
+
+**Show > Snapshots** in the same dialog lists the uncommitted work GitSimple saved, newest first: what it was saved before, the branch, when, and what wasn't saved.
+
+- **Restore** is a preview: the files that change, and warnings when you are on another commit now. Restoring puts your files and your staged changes back exactly as they were. It saves your current uncommitted work in a new snapshot first, so a restore can be undone too. It doesn't move any branch: to also undo the commits of a pull or a reset, use the reflog list.
+- A dropped stash shows as **Dropped stash**; **Put back** returns it to the stash list (your files don't change).
+- What is not saved: ignored files, and untracked files over 50 MB (listed on the snapshot and in the result message). When the index had conflicts (an abort of a merge), the files are saved with their conflict markers but the staged state isn't.
+- If a snapshot can't be taken (for example another program holds a file open), a Windows dialog asks whether to run the action without one.
+- Snapshots are kept for 14 days, 20 at most (and up to 20 dropped stashes). They are commits in your repository under `refs/gitsimple/snapshots` that no branch points at and that are never pushed.
 
 ## Tags
 
@@ -112,7 +132,7 @@ The sides are named after the operation, with git's word in brackets in the pane
 | --- | --- |
 | **Remotes** | List, add, rename, set URL, prune, remove (preview), fetch one. Also **Overwrite remote branch (force push)**: only `--force-with-lease` with `--force-if-includes`, with a preview of the remote commits that would be discarded. Never a plain `--force` |
 | **Worktrees** | Add for a new or existing branch, remove (preview; a dirty worktree needs confirming), prune, open as a workspace |
-| **LFS** | Shown when Git LFS is installed: tracked patterns (track, untrack, Unity and Unreal presets), locked files, Lock / Unlock, force-unlock (preview). See [Git LFS](#git-lfs) |
+| **LFS** | Shown when Git LFS is installed: tracked patterns (track, untrack, Unity and Unreal presets), the LFS cache and its clean-up (preview), locked files, Lock / Unlock, force-unlock (preview). See [Git LFS](#git-lfs) |
 | **Submodules** | Status, update (`--init --recursive`) with progress |
 | **Folders** | How this copy was cloned (partial, shallow, sparse), which folders are checked out, LFS downloads for some folders. See below |
 | **Clean** | A preview of exactly what `git clean -n` lists (optionally folders and ignored files). Confirming deletes only that list |
@@ -150,7 +170,7 @@ Git LFS keeps big binary files (textures, audio, models, video) out of the histo
 
 - **Track**: type a pattern (`*.psd`) or a file (`Art/hero.fbx`), tick **Lockable** if nobody should edit those files without a lock, and press **Track**. GitSimple adds the line `git lfs track` would write (`*.psd filter=lfs diff=lfs merge=lfs -text`) at the end of `.gitattributes`, in the file's own line endings. Nothing else in the file changes.
 - **×** next to a pattern stops tracking it (removes that line). Files already committed stay in LFS in those commits.
-- **Unity preset…** and **Unreal preset…** preview the usual entries and add only the patterns your `.gitattributes` doesn't mention yet. Unity: textures, audio, video, models, fonts and packages in LFS; scenes, prefabs, assets, `.meta` and the other YAML files as `text eol=lf` (set Unity's Asset Serialization to Force Text). Unreal: `*.uasset` and `*.umap` in LFS and lockable, plus the usual binary types. The Unity preset doesn't add `merge=unityyamlmerge`, because a merge driver needs a git config entry. In a Unity project (an `Assets` folder and `ProjectSettings/ProjectVersion.txt`) the tab suggests the Unity preset.
+- **Unity preset…** and **Unreal preset…** preview the usual entries and add only the patterns your `.gitattributes` doesn't mention yet. Unity: textures, audio, video, models, fonts and packages in LFS; scenes, prefabs, assets, `.meta` and the other YAML files as `text eol=lf` (set Unity's Asset Serialization to Force Text). Unreal: `*.uasset` and `*.umap` in LFS and lockable, plus the usual binary types. The Unity preset doesn't add `merge=unityyamlmerge`; [Smart Merge during merges](unity.md#smart-merge-during-merges) does, from its own preview. In a Unity project (an `Assets` folder and `ProjectSettings/ProjectVersion.txt`) the tab suggests the Unity preset.
 
 Tracking changes `.gitattributes`, which shows in Changes: commit it so your team stores the same files in LFS. Files that are already committed are not converted.
 
@@ -165,7 +185,21 @@ The commit box's [safety net](code.md#safety-net-before-a-commit) warns when a f
 
 ### Big files before a push
 
-The [push preview's safety net](code.md#safety-net-before-a-push) checks the size of every file the pushed commits add or change, so a big file committed outside GitSimple shows up too, under the commit that added it. A file stored with LFS is a small pointer in the commit and is never listed. At 100 MB or more GitHub refuses the whole push: tracking the file with LFS now doesn't help, because the commit already holds the full file. Take it out of that commit first (amend it, or use the [interactive rebase editor](#interactive-rebase-editor) to edit an older one), then track it with LFS. The same preview also lists conflict markers and possible secrets in the pushed commits. It never blocks the push.
+The [push preview's safety net](code.md#safety-net-before-a-push) checks the size of every file the pushed commits add or change, so a big file committed outside GitSimple shows up too, under the commit that added it. A file stored with LFS is a small pointer in the commit and is never listed. At 100 MB or more GitHub refuses the whole push: tracking the file with LFS now doesn't help, because the commit already holds the full file. When the commits that hold it aren't pushed yet, **Move into LFS…** right there replaces the push preview with the preview of rewriting them so they hold an LFS pointer instead (see [Moving committed files into LFS](#moving-committed-files-into-lfs)); push again afterwards. Otherwise take it out of that commit first (amend it, or use the [interactive rebase editor](#interactive-rebase-editor) to edit an older one), then track it with LFS. The same preview also lists conflict markers and possible secrets in the pushed commits. It never blocks the push.
+
+### Moving committed files into LFS
+
+Tracking a pattern only changes what you commit next. **Repository › LFS › Move committed files into LFS** also moves files that are already committed. Type one or more patterns (`*.psd *.wav`, a path such as `Art/big.fbx`, or `Art/**` for a whole folder; no spaces or commas inside a pattern) and choose:
+
+- **From now on…**: the matching files git tracks are staged again as LFS pointers, and the patterns are added to `.gitattributes`. The preview lists the files and their sizes. Nothing is committed and history doesn't change: commit the result as usual. Older commits still hold the full files, so the repository doesn't get smaller, and pushing older unpushed commits still sends them in full. Files with their own uncommitted changes are left alone (stage them yourself), and `.gitattributes` must have no uncommitted changes. Files of 1 KB or less are left alone.
+- **In unpushed commits…**: the commits of the current branch that no remote-tracking branch has are rewritten (`git lfs migrate import`), so they hold LFS pointers. Nothing you pushed or fetched changes, so no force push is needed: the next normal push sends the new commits. The preview shows how much of each file type moves, every commit that gets rewritten, before and after, any other local branch that moves with it (one whose tip is one of those commits), and the backup. It needs a clean working copy and no merge or rebase in progress. It is refused when a tag (or another ref that isn't a branch) points at one of those commits, because GitSimple never rewrites tags, and when a branch that would move is checked out in another worktree. Windows asks you to confirm.
+- **Whole branch, then force push…**: every commit of the current branch is rewritten, pushed ones included, and the branch is force-pushed right after (`--force-with-lease` on the commit you last fetched, plus `--force-if-includes`). Use it when the big files are already on the server. The preview shows each replaced commit before and after, what the remote branch loses, the other branches that move, and the backup, and you type the branch name to confirm. Because it pushes, the preview also runs the [push safety net](code.md#safety-net-before-a-push) over the commits not on the server yet (the files the rewrite moves into LFS aren't sent in full, and it says so). When the branch's history changes GitHub Actions workflows and git pushes with GitSimple's sign-in, the preview warns that GitHub will likely refuse the force push: the rewrite re-sends those commits, and GitSimple's sign-in doesn't have the "workflow" permission (see [Safety net before a push](code.md#safety-net-before-a-push)). It is refused when the branch has no remote branch, when the remote branch has commits you haven't pulled, when some of its commits are also on another remote branch (the branch it was started from, say: the two would no longer share any history), when a local branch that would move along has its own remote branch, when a tag points at one of the commits, or when pushes wouldn't upload LFS files (no LFS pre-push hook, or "Run repository git hooks" off).
+
+  **Everyone else must start over from the new commits.** Tell your team before you do it. Each teammate first pushes or saves any work they have on the old commits, then either clones again, or fetch and reset the branch to the remote one (`git fetch` then `git reset --hard origin/<branch>`, which discards their local commits on it). Branches started from the old commits must be rebased onto the new ones. Pull requests from this branch show the new commits. The old commits (and their big files) stay on GitHub until GitHub cleans them up, and in every clone that still has them.
+
+After either rewrite the old commits are kept under `refs/gitsimple/backup/<time>/<branch>`, a ref nothing pushes, so you can reset back to them. They also keep the old full files in your `.git` folder until you delete that ref. The files in your working copy keep their content (GitSimple runs `git lfs checkout` after the rewrite). Other local branches that were started from the rewritten commits keep the old ones; rebase them if they need the change. Rewritten commits aren't signed: if the repository signs its commits, the preview says so, and a branch that must have signed commits on GitHub refuses the push. The backup refs, like Undo's snapshots, never show in History's "All branches".
+
+The console doesn't run `git lfs migrate`.
 
 ### Locks
 
@@ -181,6 +215,20 @@ A lock tells your team you are editing a file nobody can merge (a scene, a prefa
 GitSimple asks the LFS server for the locks every 5 minutes while the window has focus (only in repositories that use LFS), and **Refresh** asks at once. Your own locks show as soon as you take them.
 
 Git LFS makes **lockable** files read-only in your working copy until you lock them (when its hooks are installed). Lock the file first, then open it in your editor or engine.
+
+### Cleaning up the LFS cache
+
+Git LFS keeps a copy of every LFS file you have downloaded or committed in the repository's `.git/lfs/objects` folder, so a project with big textures can fill the disk over time. **Repository › LFS › LFS cache on this computer** shows how big it is.
+
+**Clean up…** asks Git LFS (`git lfs prune --dry-run`) which copies it no longer needs and shows them in a preview: how many files, how much space, and what Git LFS counted. Confirm and the copies are deleted (`git lfs prune`). Git LFS never deletes:
+
+- the files of what is checked out, of your stashes and of your other worktrees;
+- the files of recent branches and commits (by default the last 7 days of branches, plus 3 days; the `lfs.fetchrecent*` and `lfs.pruneoffsetdays` settings, which GitSimple doesn't change);
+- the files of commits you haven't pushed yet (to `origin`, or the remote in `lfs.pruneremotetocheck`).
+
+**Check the server first** is on by default and recommended: every file is looked up on the LFS server before its local copy goes, also a file only the reflog (an amended or reset commit), an [Undo](#undo) snapshot or a kept stash still refers to. A file the server doesn't have is kept, and the preview says how many. It needs the network and your sign-in, and Git LFS 3.4 or later. Untick it to clean up offline: then a file only the reflog, a snapshot or a kept stash refers to, from work you never pushed, is lost for good, and restoring that snapshot or stash can't bring the file back.
+
+Running it checks again that the list is the same as in the preview, and Windows asks you to confirm. A deleted copy is downloaded again from the server when a checkout needs it. A custom `lfs.storage` folder isn't measured. The console doesn't run `git lfs prune`.
 
 ## The git console
 

@@ -67,16 +67,13 @@ One page per topic:
 <!-- roadmap:start: copied from docs/roadmap.md in the GitSimple source repo on each release. Edit it there; changes here are overwritten. -->
 ## Planned
 
+- **More hosts**: GitLab next (0.7.0: issues, merge requests, CI status, on the host boundary 0.6.0 put in place), then Azure DevOps and Bitbucket
+- **Translations**: the first languages, once error and preview messages from the app's core can be translated too (everything else already can)
+- **GitHub Enterprise**: notifications from an Enterprise Server in the Inbox, GitHub Projects mode and CI job logs on a server
 - **Code viewer**: an overlay mode for image diffs
-- **History**: view any file at any commit, and diff two versions of a file
-- **Safer git**: undo anything, including uncommitted work; before → after previews for merge, rebase, reset and force push
-- **Commits**: git identity per repository, signed commits
-- **Pull requests**: warnings when other pull requests touch the same files
-- **Issues**: a multi-repository dashboard on Home, an issue-to-merge autopilot
-- **Game development**: move files that are already committed into Git LFS, LFS cache clean-up, Unity Smart Merge as an automatic merge driver
-- **Work networks**: proxy and custom certificate support
+- **Issues**: an issue-to-merge autopilot
 
-Further out: GitLab, Bitbucket and Azure DevOps; Windows notifications and a tray icon; translations. Plans can change, and nothing here has a date.
+Plans can change, and nothing here has a date.
 <!-- roadmap:end -->
 
 ## Please don't share the installer

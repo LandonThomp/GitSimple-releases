@@ -39,7 +39,10 @@ Creating, renaming and re-dating sprints is off until you allow it in Settings, 
 Click an issue to open it.
 
 - Edit the title and description. A change made on GitHub meanwhile is detected per field and offered as reload or overwrite.
+- Tick or untick a task-list box (`- [ ] item`) in the description to save the description with just that box changed. Boxes in comments are read-only.
 - Comments with markdown.
+- **Attach on GitHub** under the comment box adds a file (an image, a log) to a comment. GitHub doesn't let apps upload files, so the button copies what you wrote, keeps it in the box, and opens the issue on GitHub: paste it into the comment box there and drag the file in. Clear the draft here once you've posted it.
+- **Reactions** under the description and each comment: GitHub's eight emoji with how many people chose each. Yours are highlighted; click one to add or take back yours, or the smiley to pick another. On a locked issue they are shown but can't be changed.
 - Pickers for status, priority, assignees, labels, sprint, estimate and milestone.
 - Close and reopen with a reason.
 - Relations: parent, sub-issues, blocked by, blocking, mentioned in.

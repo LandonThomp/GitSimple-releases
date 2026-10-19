@@ -44,6 +44,12 @@ Settings marked **Advanced** below sit in a collapsed **Advanced** group in Basi
 | Whitespace changes | Show | **Ignore amount** (`git diff -b`) or **Ignore all** (`git diff -w`). Also in the diff header. While whitespace is hidden, hunks and lines can't be staged one by one. See [Reading a diff](code.md#reading-a-diff) |
 | Syntax highlighting | On | Colours code by language in diffs, Files (content and blame) and the conflict resolver. Files over 512 KB or 20,000 lines are always shown plain; turn it off on a slow machine |
 
+### Identities
+
+The names and emails you commit as, for example a work and a personal one (**Settings > Git > Identities**, saved with the other Git settings). Each repository chooses one under **Settings > Workspaces > Commit as**; choosing saves at once and changes nothing in git yet. **Apply to repository…** (on the active workspace, or **Apply…** in the commit box) shows the old and new `user.name` and `user.email` and, when you confirm, writes them into that repository's `.git/config`. Your global configuration is never touched, and this is the only git configuration GitSimple writes. If `author.name` / `author.email` or the `GIT_AUTHOR_NAME` / `GIT_AUTHOR_EMAIL` environment variables are set, they win over `user.*` (as in git) and GitSimple says so instead of offering to apply. With no identity chosen, commits use whatever your git configuration says. Removing an identity clears it from the workspaces that used it (the repository's `.git/config` keeps what was written).
+
+Signing is not a GitSimple setting: it follows `commit.gpgsign` in your git configuration (see [Changes](code.md#changes)).
+
 ### Advanced
 
 | Setting | Default | What it does |
@@ -64,6 +70,22 @@ Settings marked **Advanced** below sit in a collapsed **Advanced** group in Basi
 | Enable the Console | On | Show the Console view and allow its commands. Basic mode hides the view regardless |
 | Path to git.exe (optional override) | Automatic | Pick with Browse: a local `git.exe` in a Git for Windows folder that answers `git --version`. Clear returns to automatic |
 | Repository maintenance | – | **Run garbage collection** (`git gc`, never `--prune=now`) |
+
+## Network
+
+For company networks: a proxy, HTTPS inspection, or both. GitSimple and git each get these settings.
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| Proxy | Windows settings | **Windows settings**: the proxy from Windows Settings > Network & internet > Proxy ("Use a proxy server"), for GitSimple and git. A setup script (automatic configuration) isn't read; choose Manual then. With no proxy in Windows, GitSimple uses the `HTTPS_PROXY` environment variable if there is one, and git keeps its own settings. A Windows proxy address with a user name and password is ignored. **Manual**: the address below. **No proxy**: connect directly, even when Windows or git name a proxy. **Leave as is**: GitSimple uses the `HTTPS_PROXY` environment variable or the Windows proxy, and git keeps its own `http.proxy` |
+| Proxy address | Empty | Manual only: `http://host:port`. A proxy that asks for a user name and password isn't supported yet, and an address with one is refused |
+| Don't use the proxy for | Empty | Manual only: host names, domains (`.corp.example`) or IP ranges (`10.0.0.0/8`), separated by commas |
+| Extra trusted certificate | None | GitSimple always trusts the Windows certificate store. If your organization inspects HTTPS and its root certificate isn't installed in Windows, choose it with **Browse** (a PEM file: Base-64 text starting with `-----BEGIN CERTIFICATE-----`). It can't be typed in. With git's own certificates (below), git gets this file instead of its built-in list, so the file must hold every certificate git needs; behind an inspecting proxy that is usually just the company root |
+| Certificates for git | Git's own setting | **Windows certificate store (Schannel)** makes git trust what Windows trusts, which is usually what a company network needs. The extra certificate above is then not passed to git |
+
+**Test connection** reaches the GitHub API with GitSimple and github.com with git, using the saved settings, and shows which one failed and why. There is no setting that turns certificate checks off.
+
+When something fails with a certificate error ("unknown issuer", "unable to get local issuer certificate"), install your organization's root certificate in Windows, or choose it here; for git, also try **Windows certificate store (Schannel)**.
 
 ## Appearance
 
@@ -185,6 +207,24 @@ Every shortcut, grouped by where it works, with its keys. **Change** records new
 
 Updates come from the published releases of `LandonThomp/GitSimple-releases`. The app restarts after installing one.
 
+## Account
+
+Your github.com sign-in (or the server sign-in the app is open on) and **Sign out**. Below it, **GitHub Enterprise Server**: the servers you added, each with its own **Sign in** / **Sign out**, and the trash button to remove one (refused while a repository on it is still added). **Add a server** asks for the server's address and the OAuth app client ID; see [Signing in to GitHub Enterprise Server](getting-started.md#signing-in-to-github-enterprise-server).
+
+## Notifications
+
+See [Inbox](inbox.md) for what these do.
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| Review requested | On | A Windows notification when someone asks you, or a team you're on, to review a pull request |
+| Mentions | On | A Windows notification when you or a team you're on is @mentioned |
+| Assigned | On | A Windows notification when an issue or pull request is assigned to you |
+| CI finished | On | A Windows notification when a GitHub Actions run you started has finished |
+| Keep running in the tray | Off | Closing the window hides GitSimple to the tray (next to the clock) instead of quitting, so notifications keep arriving. Quit from the tray icon's menu |
+
+Windows notifications only appear while GitSimple isn't the window you're using. These settings are for the whole app, not per repository.
+
 ## Supported hosts
 
-GitHub now. GitLab, Bitbucket and Azure DevOps are planned.
+GitHub (github.com) and GitHub Enterprise Server (issues in label mode). GitLab, Bitbucket and Azure DevOps are planned.

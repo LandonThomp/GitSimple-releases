@@ -23,6 +23,25 @@ GitSimple uses GitHub's **device flow**:
 
 > **Organization repositories missing?** An owner may need to approve GitSimple under the organization's Settings, Third-party access.
 
+### Signing in to GitHub Enterprise Server
+
+If your company runs its own GitHub (GitHub Enterprise Server), you can use its repositories too, with or without a github.com account.
+
+1. Your administrator registers an OAuth app for GitSimple on the server, with **Enable Device Flow** turned on, and gives you its **client ID**.
+2. On the sign-in screen click **GitHub Enterprise Server** (or, once signed in, go to Settings, Account, **Add a server**). Enter the server's address (`https://github.example.com`) and the client ID, then **Add server**. GitSimple asks you to confirm in a Windows dialog, because it lets the app contact that server.
+3. Click **Sign in to github.example.com** and enter the code on the server, as for github.com.
+
+| | |
+| --- | --- |
+| One sign-in per server | Each server has its own token in Windows Credential Manager. Your github.com sign-in is never sent to a server, and a server's sign-in never leaves that server (git included). |
+| Fallback | `gh auth token --hostname <server>` when nothing is stored. |
+| Invite-only | The whole server is invited: everyone it signs in may use GitSimple once the server is on the invite list. |
+| Issues | Label mode only for now: GitHub Projects on a server come later. |
+| Features the server doesn't offer | Hidden, not shown as errors or greyed out: in a repository on a server there is no Project choice in Settings, Issues (label mode only), no **Sprints** in the sidebar, no **Show log** on a check (re-runs work), and the **Inbox** and its settings are hidden while the app is open on the server's sign-in (notifications come from github.com). |
+| Not supported yet | GitHub Enterprise Cloud with data residency (`*.ghe.com`), servers on a port other than 443. |
+
+Repositories on the server are added like any other: from a local clone whose `origin` is on the server, or under **From GitHub** after choosing the server.
+
 ## Adding a repository
 
 Use **Add a repository**, then either:
@@ -52,9 +71,10 @@ You can combine them. Everything after the clone (changing folders, downloading 
 It shows:
 
 - the active branch, with how far ahead / behind it is;
-- a **Status** card: uncommitted changes, an operation in progress, the branch's pull request;
+- a **Status** card: uncommitted changes, an operation in progress, **Same files** when other open pull requests change files this branch changed (see [Pull requests](code.md#other-pull-requests-that-change-the-same-files)), the branch's pull request;
 - **My locks**, when you hold Git LFS locks in this repository: each file, how long you've held it, and **Unlock** (a file with uncommitted changes says "commit first": Git LFS only unlocks a file with none). See [Git LFS](advanced-git.md#locks);
 - **My open issues** (works without a clone);
+- **All repositories**, when you have added more than one (see below);
 - the trust banner ("Review and trust…") and the operation banner when they apply.
 
 `Ctrl+Z` opens Recent actions (undo) here too.
@@ -82,6 +102,21 @@ Notes:
 - A stash apply that stopped on conflicts skips rule 2 and goes to rule 3.
 - Rule 9 waits until the pull request lookup has finished.
 - Pull and Push show their usual preview first. The other steps take you to Changes, Branches or the pull request.
+
+### All repositories
+
+Under the cards of the active repository, **All repositories** lists every repository you added, one row each:
+
+- its next step, by the same rules as the Next step button (for example **Commit 3 changes** or **Pull 2 new commits**). For a repository that isn't the active one, GitSimple doesn't know its default branch, so it never suggests **Create pull request** there; it does show **Open pull request #N** when you have an open pull request for that branch;
+- **Review trust** instead of a step when the clone's own git settings can run programs: GitSimple doesn't run git there until you open it and review them (see ["Review and trust…"](advanced-git.md#review-and-trust));
+- **Folder not found** when the clone's folder is gone, **Clone this repository** when there is no clone;
+- counts of pull requests waiting for your review, your open pull requests (with the worst check result) and open issues assigned to you. The arrow on the right shows them; GitHub's open / closed state only.
+
+Repositories with something to do come first. The first 20 are shown, **Show more** shows the rest.
+
+Click a row to switch to that repository: it opens where its step is done (Changes, Branches, the pull request, or Home). Click an issue or pull request to switch and open it.
+
+The list refreshes when you come back to the window (GitHub at most once a minute) and with **Refresh**. Each GitHub is asked with its own sign-in: repositories on a GitHub Enterprise Server use that server's sign-in, never github.com's. When you aren't signed in to a server (or it was removed from Settings, Account), a line says so and its repositories show their local state only.
 
 ## Basic and Advanced mode
 

@@ -66,8 +66,26 @@ Files that are already committed stay in git; ignoring them only stops new ones 
 
 ## More for Unity teams
 
-- **Smart Merge for scene and prefab conflicts:** set UnityYAMLMerge in [Settings, Git](settings.md), then use the [conflict resolver](advanced-git.md#conflict-resolver).
+- **Smart Merge for scene and prefab conflicts:** set UnityYAMLMerge in [Settings, Git](settings.md), then use the [conflict resolver](advanced-git.md#conflict-resolver). To have it run during the merge itself, see [Smart Merge during merges](#smart-merge-during-merges).
 - **Readable diffs:** scenes, prefabs and other Unity assets get a **Summary** grouped by GameObject and component, package changes are summarised, and images show side by side. See [Unity files, package files and images](code.md#unity-files-package-files-and-images).
 - **Git LFS and locks:** the Unity `.gitattributes` preset, lock-first editing and **My locks** on Home. See [Git LFS](advanced-git.md#git-lfs).
 - **Safety net:** big files, leftover conflict markers and likely secrets are flagged before a commit. See [Safety net before a commit](code.md#safety-net-before-a-commit).
 - **Big projects:** partial, shallow and sparse clones. See [Cloning a big repository](getting-started.md#cloning-a-big-repository).
+
+## Smart Merge during merges
+
+With UnityYAMLMerge set in [Settings, Git](settings.md), GitSimple can let it merge scenes, prefabs and the other Unity YAML assets while git merges, so many scene conflicts never reach you.
+
+1. **Repository › LFS › Unity Smart Merge in merges › Use automatically…** previews an edit of the root `.gitattributes`: `merge=unityyamlmerge` is added to the line of each Unity YAML type (`*.unity`, `*.prefab`, `*.asset`, `*.mat`, `*.controller`, `*.anim` and the rest UnityYAMLMerge understands), or a new line is added for a type the file doesn't mention. Types stored in Git LFS (the merge driver would only see pointer files) and types with their own merge setting (`merge=...`, `-merge`, `binary`) are left alone, and the preview lists them. GitSimple also asks git which of your tracked Unity files are in LFS, so a broader rule such as `Assets/** filter=lfs` counts too.
+2. Commit `.gitattributes` so your team gets it.
+
+From then on, GitSimple's merge, pull, rebase, cherry-pick, revert and stash apply / pop pass UnityYAMLMerge to git as the merge driver for those files (`merge -p %O %B %A %A`, Unity's documented form). What it can't resolve stops as a normal conflict and opens in the [conflict resolver](advanced-git.md#conflict-resolver). A result that still contains conflict markers is treated as a conflict too, never committed.
+
+GitSimple never writes the driver to git config: it is defined for each of those commands only, and the UnityYAMLMerge path is checked again every time (the file name, a fixed local drive, and only plain path characters, because git runs the driver through a shell). So:
+
+- a merge in a terminal or in another git client merges these files as text, as before, unless you set up Smart Merge there yourself;
+- with UnityYAMLMerge not set (or moved), GitSimple's merges are text merges too;
+- the console doesn't use the driver.
+
+UnityYAMLMerge may start the fallback tool named in its `mergespecfile.txt` for a conflict it can't resolve. GitSimple waits for it like for any merge step (up to the time limit in Settings, Git). Not tested with a real Unity install yet.
+

@@ -10,6 +10,7 @@ Pick a page.
 | [Code](code.md) | Committing, pulling and pushing, branches, history, files, pull requests, and linking code to issues |
 | [Advanced git](advanced-git.md) | Stashes, rewriting history, the conflict resolver, undo, tags, remotes, Git LFS (tracking, big files, locks), the console, trusting a repository |
 | [Issues](issues.md) | The issue list, board and sprints, the issue panel, GitHub Projects |
+| [Inbox](inbox.md) | GitHub notifications from every repository, Windows notifications, keeping GitSimple in the tray |
 | [Settings](settings.md) | Every setting with its default, settings search, themes |
 | [Keyboard shortcuts](shortcuts.md) | All of them on one page |
 | [Unity projects](unity.md) | `.meta` and GUID checks before a commit, project settings, editor version changes, the recommended `.gitignore` |
