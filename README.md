@@ -67,7 +67,8 @@ One page per topic:
 <!-- roadmap:start: copied from docs/roadmap.md in the GitSimple source repo on each release. Edit it there; changes here are overwritten. -->
 ## Planned
 
-- **More hosts**: GitLab next (0.7.0: issues, merge requests, CI status, on the host boundary 0.6.0 put in place), then Azure DevOps and Bitbucket
+- **More hosts**: GitLab in a later release (issues, merge requests, CI status, on the host boundary 0.6.0 put in place), then Azure DevOps and Bitbucket
+  - Plan: [plans/gitlab.md](plans/gitlab.md)
 - **Translations**: the first languages, once error and preview messages from the app's core can be translated too (everything else already can)
 - **GitHub Enterprise**: notifications from an Enterprise Server in the Inbox, GitHub Projects mode and CI job logs on a server
 - **Code viewer**: an overlay mode for image diffs

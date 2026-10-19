@@ -31,20 +31,22 @@ Settings marked **Advanced** below sit in a collapsed **Advanced** group in Basi
 
 ## Git
 
+### All repositories or this repository
+
+**Applies to** at the top switches between **All repositories** (the settings below) and **This repository** (the repository open now). In This repository you can give that repository its own pull strategy, automatic fetch interval, git hooks switch, rebase defaults (autostash, autosquash), default reset mode, commit message template and branch name template. Each row says **Same as all repositories** until you change it; then it says **Changed for this repository** and has **Reset**, which goes back to the all-repositories value. **Save** stores them with the repository; **Reset all to all repositories** clears every one. A changed setting applies only to that repository, and a later change in All repositories doesn't touch it. When the open repository has its own settings, All repositories says how many, with a link to them. They are part of a [settings export](#import-and-export).
+
 ### Everyday
 
 | Setting | Default | What it does |
 | --- | --- | --- |
 | Use GitSimple's GitHub sign-in for git | On | github.com https remotes use your GitSimple sign-in (passed over a pipe, never in arguments, environment or files). Off: Git Credential Manager and your own helpers. Other hosts always use yours |
-| Pull strategy | Merge | Merge, Rebase, or "Only when nothing needs combining" (fast-forward only). A rebase pull with conflicts stays open: resolve in Changes, then continue or abort from the banner |
-| Fetch automatically | 5 minutes | On window focus and every N minutes; 0 = off |
+| Fetch automatically | 5 minutes | On window focus and every N minutes; 0 = off. Also while minimised or in the tray when **New commits on the upstream** (Notifications) is on |
 | Default clone folder | `%USERPROFILE%\source\repos` | Where **Clone to folder…** starts |
 | Editor | First one found | What **Open in editor** starts: VS Code, VS Code Insiders, Cursor, VSCodium, Windsurf, Sublime Text or Notepad++. Pick with Browse or from the editors found; a path can't be typed in. Clear returns to "first one found" |
-| Diff layout / context lines / wrap long lines | Unified, 3, off | Also switchable in the diff header |
-| Whitespace changes | Show | **Ignore amount** (`git diff -b`) or **Ignore all** (`git diff -w`). Also in the diff header. While whitespace is hidden, hunks and lines can't be staged one by one. See [Reading a diff](code.md#reading-a-diff) |
+| Diff layout / wrap long lines | Unified, off | Also switchable in the diff header |
 | Syntax highlighting | On | Colours code by language in diffs, Files (content and blame) and the conflict resolver. Files over 512 KB or 20,000 lines are always shown plain; turn it off on a slow machine |
 
-### Identities
+### Identities (collapsed in Basic mode until you have one)
 
 The names and emails you commit as, for example a work and a personal one (**Settings > Git > Identities**, saved with the other Git settings). Each repository chooses one under **Settings > Workspaces > Commit as**; choosing saves at once and changes nothing in git yet. **Apply to repository…** (on the active workspace, or **Apply…** in the commit box) shows the old and new `user.name` and `user.email` and, when you confirm, writes them into that repository's `.git/config`. Your global configuration is never touched, and this is the only git configuration GitSimple writes. If `author.name` / `author.email` or the `GIT_AUTHOR_NAME` / `GIT_AUTHOR_EMAIL` environment variables are set, they win over `user.*` (as in git) and GitSimple says so instead of offering to apply. With no identity chosen, commits use whatever your git configuration says. Removing an identity clears it from the workspaces that used it (the repository's `.git/config` keeps what was written).
 
@@ -54,6 +56,9 @@ Signing is not a GitSimple setting: it follows `commit.gpgsign` in your git conf
 
 | Setting | Default | What it does |
 | --- | --- | --- |
+| Pull strategy | Merge | Merge, Rebase, or "Only when nothing needs combining" (fast-forward only). A rebase pull with conflicts stays open: resolve in Changes, then continue or abort from the banner |
+| Diff context lines | 3 | Unchanged lines shown around each change. Also in the diff header |
+| Whitespace changes | Show | **Ignore amount** (`git diff -b`) or **Ignore all** (`git diff -w`). Also in the diff header. While whitespace is hidden, hunks and lines can't be staged one by one. See [Reading a diff](code.md#reading-a-diff) |
 | Run repository git hooks on commit and push | On | Hooks run for commit, amend, merge, pull and push. Status, diff and log never run hooks |
 | Refresh changes | 10 seconds | Status check while the window is focused; 0 = off |
 | Network time limit | 30 minutes | Clone, fetch, pull and push stop after this |
@@ -61,6 +66,8 @@ Signing is not a GitSimple setting: it follows `commit.gpgsign` in your git conf
 | Branch name template | `{type}/{issue}-{slug}` | Placeholders `{type}`, `{issue}`, `{key}`, `{slug}`, `{user}`; live preview |
 | Branch type rules *(per workspace)* | `bug` gives `fix`, otherwise `feat` | Rules on issue type or label, first match wins |
 | Commits that belong to an issue *(per workspace)* | Key in front of the summary | None, `Refs #N`, `Fixes #N`, or the key in front of the summary; live preview |
+| Commit message helpers *(per workspace)* | All off | **Conventional Commits** (a type and scope picker; edit the types, `feat, fix, docs, ...` by default, and suggested scopes), **Check the message format** (soft hints; wrap width 72), **Recent summaries**. See [Changes](code.md#changes) |
+| Safety net rules *(per workspace)* | None | Your own checks before a commit and a push; see [Safety net rules](#safety-net-rules) |
 | Pull request title / body templates *(per workspace)* | `{title}` / `{commits}\n\n{closes}` | Placeholders `{title}`, `{issue}`, `{key}`, `{branch}`; body also `{commits}`, `{closes}`; live preview |
 | Merge tool | None | Pick with Browse or from the tools found: VS Code, P4Merge, KDiff3, Beyond Compare, Meld, WinMerge, TortoiseGitMerge. A path can't be typed in |
 | Unity Smart Merge | None | UnityYAMLMerge for Unity scenes, prefabs and other YAML assets (`.unity`, `.prefab`, `.asset`, `.mat`, `.controller`, `.anim` and more). Pick with Browse (`UnityYAMLMerge.exe` only) or from the Unity Editors installed with Unity Hub: the repository's Unity version comes first (from `ProjectSettings/ProjectVersion.txt`), then the newest. Other files keep the merge tool above; with this empty, Unity files use it too |
@@ -71,9 +78,19 @@ Signing is not a GitSimple setting: it follows `commit.gpgsign` in your git conf
 | Path to git.exe (optional override) | Automatic | Pick with Browse: a local `git.exe` in a Git for Windows folder that answers `git --version`. Clear returns to automatic |
 | Repository maintenance | – | **Run garbage collection** (`git gc`, never `--prune=now`) |
 
+### Safety net rules
+
+Each repository can add its own checks to the [safety net](code.md#safety-net-before-a-commit), on top of the built-in ones. They run before a commit and in the push preview, only warn, and are kept in GitSimple's settings (never read from the repository, so a cloned repository can't add or turn off a rule). Save them with **Save rules for owner/repo**.
+
+- **Secret patterns:** a name and a regular expression, for example `Payment key` and `pay_live_[0-9a-f]{16}`. Only the lines a commit adds are checked. The syntax is Rust's `regex` (no look-ahead or back-references; `\w` and `\d` match ASCII only). A pattern that isn't valid, that would match empty text, or that is too big to check quickly (`[a-z]{3000}`, say) is refused when you save, with the rule's name in the message. If the patterns take more than 5 seconds on a very large change, the rest isn't checked with them, and lines over 16 KB (a minified file, say) aren't read by them; the warning then says part wasn't checked.
+- **File patterns:** a name and a pattern for files that shouldn't be committed: `*.env` (that name in any folder), `secrets/**` (everything under a folder at the root), `config/*.pem`. `*` stays within a folder, `**` crosses folders, `?` is one character, and `[` `]` are plain characters (not a set as in `.gitignore`); matching ignores case. A pattern needs a letter or digit (`*.*` would name every file).
+- **Flag files from N MB:** staged or pushed files of at least this size get a warning (1 to 49 MB). GitHub itself warns from 50 MB and refuses 100 MB; empty means only those limits.
+
+Findings of secret and file patterns can be dismissed like the built-in ones (**Not a secret**, **Don't check this file**); the size warning can't be dismissed, like the big-file warning. A repository's rules are part of a [settings export](#import-and-export).
+
 ## Network
 
-For company networks: a proxy, HTTPS inspection, or both. GitSimple and git each get these settings.
+For company networks: a proxy, HTTPS inspection, or both. GitSimple and git each get these settings. Everything except **Test connection** sits in the collapsed **Proxy and certificates** group in Basic mode.
 
 | Setting | Default | What it does |
 | --- | --- | --- |
@@ -107,6 +124,8 @@ When something fails with a certificate error ("unknown issuer", "unable to get 
 **Import theme** loads your own family from a JSON file. **Export current** saves the selected family in the same format (or copies it as JSON).
 
 Rules: `#RRGGBB` colours only, every key of `dark` and `light` required, family name up to 40 characters, at most 20 imported families, no name that matches a built-in. Anything else is rejected with a message that names the field: an unknown key or variant (also in `syntax`, where older versions ignored it), a colour that isn't `#RRGGBB`, or a value of the wrong shape. Nothing from a rejected file is kept.
+
+The `muted` colour is used for secondary text, so it is darkened (or lightened) toward the text colour until it has at least 4.5:1 contrast on the background, panels and hover rows (WCAG AA). A muted colour that is already readable is used as given.
 
 Each family can also have three optional groups. Each has `dark` and/or `light` (no other variants), and each variant may set any of its keys:
 
@@ -209,7 +228,7 @@ Updates come from the published releases of `LandonThomp/GitSimple-releases`. Th
 
 ## Account
 
-Your github.com sign-in (or the server sign-in the app is open on) and **Sign out**. Below it, **GitHub Enterprise Server**: the servers you added, each with its own **Sign in** / **Sign out**, and the trash button to remove one (refused while a repository on it is still added). **Add a server** asks for the server's address and the OAuth app client ID; see [Signing in to GitHub Enterprise Server](getting-started.md#signing-in-to-github-enterprise-server).
+Your github.com sign-in (or the server sign-in the app is open on) and **Sign out**. Below it, **GitHub Enterprise Server** (collapsed in Basic mode until you add a server): the servers you added, each with its own **Sign in** / **Sign out**, and the trash button to remove one (refused while a repository on it is still added). **Add a server** asks for the server's address and the OAuth app client ID; see [Signing in to GitHub Enterprise Server](getting-started.md#signing-in-to-github-enterprise-server).
 
 ## Notifications
 
@@ -221,9 +240,30 @@ See [Inbox](inbox.md) for what these do.
 | Mentions | On | A Windows notification when you or a team you're on is @mentioned |
 | Assigned | On | A Windows notification when an issue or pull request is assigned to you |
 | CI finished | On | A Windows notification when a GitHub Actions run you started has finished |
-| Keep running in the tray | Off | Closing the window hides GitSimple to the tray (next to the clock) instead of quitting, so notifications keep arriving. Quit from the tray icon's menu |
+| New commits on the upstream | On | A Windows notification when the automatic fetch (or the tray's Fetch all) finds new commits on the upstream of the branch you're on. The automatic fetch then also runs while GitSimple is minimised or in the tray |
+| Keep running in the tray | Off | Closing the window hides GitSimple to the tray (next to the clock) instead of quitting, so notifications keep arriving. The tray menu also has your recent repositories and **Fetch all repositories**. Quit from the tray icon's menu |
+| Start with Windows | Off | Opens GitSimple minimized when you sign in to Windows (in the tray when the setting above is on) |
 
 Windows notifications only appear while GitSimple isn't the window you're using. These settings are for the whole app, not per repository.
+
+## Import and export
+
+Moves your setup to another computer, or shares a team setup, as one JSON file.
+
+**Export settings** saves: appearance (theme, imported themes and code colours, fonts, diff options, Basic or Advanced), git settings, your repositories with their issue, branch and commit message settings and their own safety-net rules, saved issue views and filters, changed keyboard shortcuts, and the update and notification switches.
+
+What is never in the file:
+
+- Your sign-in and tokens. The token stays in Windows Credential Manager, and nothing in the export reads it.
+- Program paths: git.exe, the merge tools and the editor. Choose them again with **Browse** on the other computer.
+- Commit identities (names and emails) and which identity each repository commits as. An import leaves the ones on this computer as they are.
+- Imported font files. A setting that uses one goes back to the default font; import the font file there and choose it again.
+- Settings > Network and the GitHub Enterprise Servers you added.
+- Local folders, unless you switch on **Include local folders** (where each repository and new clones are on this computer). Leave it off when you share the file with others.
+
+**Import settings…** reads such a file and shows what would change, part by part: git settings, repositories, saved issue views, keyboard shortcuts, appearance, and updates and notifications, with the names of the settings that change. Parts that are already the same are greyed out. Untick what you don't want, then **Import**. Repositories that aren't here yet are added (from their local folder when the file has one and it holds that repository, otherwise without a folder; choose its local folder later in Settings > Workspaces). Only folders on a drive letter are used: network shares in a file are refused. A repository on a GitHub Enterprise Server you haven't added in Settings > Account is skipped.
+
+The file is checked like a theme file: a value of the wrong type or out of range is refused with its name, and nothing is applied. A repository's issue and branch settings are checked when they are saved; one that fails is listed in the message at the end, and the other parts are still imported. Settings this version doesn't know are ignored, and a file from a newer version is refused.
 
 ## Supported hosts
 

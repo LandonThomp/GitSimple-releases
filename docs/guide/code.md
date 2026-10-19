@@ -21,9 +21,21 @@ Four lists: **Conflicted**, **Ready to commit** (staged), **Changes** and **New 
 - optional **co-authors**: pick people who worked on it with you from the recent authors of the repository and its GitHub users (their GitHub noreply address, so GitHub credits their account; for a repository on a GitHub Enterprise Server, only the recent authors for now, and the picker says so), or type `Name <email>` for anyone else. Each gets a `Co-authored-by:` line at the end of the message (no need to type those lines). You are never added as your own co-author, and the same person is added once;
 - **Commit**. With nothing staged the button reads **Stage all and commit**.
 
+**Message helpers** (off until you turn them on for the repository in [Settings > Git > Advanced](settings.md#advanced), under **Commit message helpers**):
+
+- **Conventional Commits:** a **Type** list, a **Scope** box and **Breaking change** above the summary write `feat(ui)!: ` in front of it. The summary stays the text you edit: typing the prefix yourself sets the controls too. Scopes from the settings are suggested; any other can be typed. A summary without one of the types gets a hint. With the issue reference style **Key in front**, the key goes after the type (`feat(ui): #42 add login`), so the message stays a Conventional Commit.
+- **Check the message format:** hints under the description for a summary that ends with a period, a summary that doesn't read as a command ("Added ..." rather than "Add ..."), and description lines longer than the width you set (72 characters by default; long URLs and code are left alone). **Wrap lines** breaks the long lines at spaces. These are only hints: the commit is never blocked.
+- **Recent summaries:** **Recent** lists the last summaries of the current branch (no merges or repeats) to reuse one (without an issue key in front, so it doesn't refer to the old issue). Picking one over a summary you typed can be undone from the message that appears.
+
+The commit box always puts a blank line between the summary and the description, so there is nothing to check there.
+
 **Add to last commit (amend)** shows what it replaces and warns when that commit is already pushed. While amending, the picker shows the last commit's co-authors (not the description), so you can add or remove them; they are written back once. Co-authors picked for your next commit come back when you turn amend off. Co-authors are read from the message's final block of `Key: value` lines only; a line mixed in with other text stays in the description.
 
 **Who commits:** under the message the box shows the name and email git will use (hover to see which configuration each comes from: this repository, your global config, ...). When the repository has an identity chosen under **Settings > Workspaces > Commit as** and git would use another one, the box says so; **Apply…** shows the change to the repository's `.git/config` (old and new `user.name` / `user.email`) and writes it when you confirm. Nothing else in your git configuration is changed. See [Identities](settings.md#identities).
+
+When git has no name or email at all, the box says **Commits need your name and email**. With no saved identities, **Set name and email…** asks for them, saves them as an identity, chooses it for this repository and shows the usual preview of writing it into the repository's config; with saved identities, **Choose identity…** opens Settings > Workspaces.
+
+On a small window the file list keeps at least about a third of the column; the commit box and its warnings scroll, and the **Commit** button stays in view.
 
 **Signed commits:** GitSimple follows your git configuration. With `commit.gpgsign` on, the box says **Commits will be signed (SSH)** (or GPG, X.509) and git signs as usual with `gpg.format`, `user.signingkey` and `gpg.program` / `gpg.ssh.program`. There is no switch in GitSimple. git runs without a console window, so a signer can't ask for a passphrase in a terminal:
 
@@ -43,6 +55,7 @@ Above the commit button, GitSimple checks what is staged and warns. It never blo
 - **Big files:** a staged file over 100 MB (GitHub refuses the push) or over 50 MB. **Track \*.ext with LFS** stores it with Git LFS instead (see [Big files before a commit](advanced-git.md#big-files-before-a-commit)). Without Git LFS installed, the warning says how to install it.
 - **Conflict markers:** a staged text file that still has `<<<<<<<`, `=======` or `>>>>>>>` lines from a merge. A file needs a `<<<<<<<` or `>>>>>>>` line to count, because a lone `=======` is also how Markdown underlines a heading. Unity can't load a scene, prefab or asset with markers in it.
 - **Possible secrets:** private key blocks (`-----BEGIN ... PRIVATE KEY-----`), GitHub tokens (`ghp_`, `gho_`, `ghu_`, `ghs_`, `ghr_`, `github_pat_`), AWS access key IDs (`AKIA...`, `ASIA...`), Google API keys (`AIza...`), and keystore files (`.keystore`, `.jks`, `.p12`, `.pfx`). Only these well-known shapes are checked, so most findings are real. A finding shows the first 4 characters and `••••`, never the whole value.
+- **Your own rules:** each repository can add its own checks in [Settings > Git > Advanced](settings.md#safety-net-rules): patterns for secrets (an internal token format, say), file patterns such as `*.env`, and a size from which files are flagged. A finding names the rule that found it; a short match shows fewer characters (a third of it), so it isn't shown whole.
 
 Only the lines the commit adds are checked, so a secret that is already in the history isn't reported again (remove it from the history and revoke it separately). Very large staged changes are checked up to 16 MB.
 
@@ -54,7 +67,7 @@ Only the lines the commit adds are checked, so a secret that is already in the h
 
 Right-click a file in **New files** and open **Ignore**:
 
-- **Write the rule to** (choose first; the menu stays open): the repository's `.gitignore`, the `.gitignore` in the file's folder, or `.git/info/exclude`, which only this copy of the repository uses and is never committed (worktrees of the repository share it).
+- **Write the rule to** (choose first; the menu stays open): the repository's `.gitignore`, the `.gitignore` in the file's folder, or `.git/info/exclude`, which only this copy of the repository uses and is never committed (worktrees of the repository share it). In Basic mode only the two `.gitignore` files are offered: a rule there shows up in Changes and can be undone like any change, while nothing in GitSimple shows `.git/info/exclude`.
 - Then pick what to ignore: **This file**, **All .ext files** (with this file's extension), or **This folder**. A folder's own `.gitignore` can't ignore that folder, so **This folder** goes to the root `.gitignore` or `.git/info/exclude`.
 
 A preview shows the exact line, the file it is added to (created when missing) and the new files it hides. **Ignore** adds the line at the end of the file in the file's own line endings; nothing else in it changes. The files leave **New files** right away. Commit the `.gitignore` so the whole team ignores them. Special characters in names (`*`, `?`, `[`) are escaped, so the rule only matches that name.
@@ -81,6 +94,7 @@ The push preview (and the force push preview, and the preview of [moving files i
 - **Check before you push** lists the findings under the commit they came from (its short id and summary): conflict markers, possible secrets and keystore files, and files of 50 MB or more (red at 100 MB, where GitHub refuses the push).
 - The rules are the same as at commit time, and only the lines each commit adds are checked, so something already on the remote isn't reported again. What the push sends is read up to 16 MB (the first 1000 commits); if there is more, the preview says part of it wasn't checked, and if the check fails it says so. A merge commit's own changes aren't checked, only the commits it brings in. In a [partial clone](advanced-git.md#folders-big-repositories) the check never downloads anything: if it needs file contents that aren't on your computer, it skips them and says so (with Git older than 2.44 it skips the added lines in every partial clone).
 - **Not a secret** and **Don't check this file** work as at commit time and are shared with it.
+- The repository's [own rules](settings.md#safety-net-rules) run here too. With a size set below 50 MB, files from that size on are listed with "over N MB".
 - **GitHub Actions workflows:** when the commits change a file under `.github/workflows/` and git pushes with GitSimple's sign-in (an https remote, with **Use GitSimple's GitHub sign-in for git** on), the preview warns that GitHub will refuse the push: GitHub only accepts workflow changes from a sign-in with the "workflow" permission, which GitSimple doesn't ask for. Push those commits from a terminal, or turn that setting off in Settings > Git so git uses your own credentials (Git Credential Manager). A refused push says the same. A GitHub CLI sign-in with the permission (`gh auth refresh -s workflow`) also works while GitSimple has no sign-in of its own.
 - It only warns: the push button stays enabled. A secret stays in the history even if a later commit deletes it, so revoke the key and fix the commit (amend, or rewrite it in [History](advanced-git.md#history-actions)) before you push. A file over 100 MB has to come out of the commits too; see [Big files](advanced-git.md#big-files-before-a-push).
 
@@ -97,8 +111,8 @@ Local and remote branches with their upstream, ahead / behind and last commit. A
 
 ## History
 
-- A paged commit list with a lane graph, branches and tags.
-- Filters: text, author, path, all branches.
+- A paged commit list with a lane graph, branches and tags. The commit message gets the room: in a narrow list the branch and tag labels shorten (hover for the full names), and the author and commit id columns show once the list is wide enough.
+- Filters: text, author, path, all branches. With a path filter, a selected commit opens on that file (or the first changed file in that folder) instead of the commit's first file. The path filter matches the name you type; to follow a file across renames, use its [History tab](#a-files-history) in Files.
 - A badge on a signed commit's details: **Signed** (verified), **Signed, key not trusted**, **Signed, expired**, **Signed, key revoked**, **Bad signature**, or **Signed, unverified** when git can't check it (no key, no gpg; for SSH signatures set `gpg.ssh.allowedSignersFile` to verify them). Hover it for the signer and key. The commit list itself never checks signatures (that would start gpg for every row).
 - Commit details with per-file diffs. Drag the border between the commit list and the details to make them wider or narrower, and the borders under the commit message and the file list to make those taller or shorter (or focus a border and use the arrow keys); the sizes are remembered.
 - **Copy SHA**, **Create branch here**, and the [advanced actions](advanced-git.md#history-actions) (right-click a commit, or its "…" menu).
@@ -128,6 +142,16 @@ Two modes, as in git: **A...B** (the default) shows what the compare side change
 
 - The tree at HEAD, loaded folder by folder, with status badges for changed files.
 - Select a file for its content, **Blame** (grouped by commit, hover for the summary; click a commit id to [open it in History](#go-to-a-commit)) and its **History** (see below).
+- Markdown files, SVG files and pictures (PNG, JPEG, GIF, WebP, BMP) also have a **Preview** tab, from the working tree or HEAD; a picture opens on it. Markdown shows as a page: pictures next to it in the repository show at the same version, links to other pages open in [Docs](getting-started.md#docs), and https links open in your browser. An SVG is drawn as a picture, so any script in it doesn't run and it loads nothing from the internet. Pictures over 10 MB, and Git LFS pictures whose content isn't on this computer, show why there's no preview.
+
+### Link to a line
+
+Right-click a line in a file's content, its blame or a commit's diff in History for:
+
+- **Copy GitHub link to line 12** (the name of the repository's host) and **Open line 12 on GitHub**. Select several lines first and right-click inside the selection for a link to all of them (`#L10-L20`). The link is fixed to the commit's full id, not the branch name, so it keeps pointing at the same lines.
+- **Copy path** (the full path on this computer) and **Copy relative path** (inside the repository).
+
+The link points at the commit shown: in a commit's diff that commit, in Files the commit you picked or HEAD. A file shown from the working tree links to HEAD; when your copy has changes HEAD doesn't have, a note says the line numbers may differ. If the commit isn't on the host yet (not pushed), the link is still copied with a warning: it works once you push. Removed lines in a diff aren't in that commit, so they only offer the paths. Diffs of uncommitted changes and pull requests don't offer links.
 
 ### A file's history
 
@@ -150,11 +174,13 @@ Diffs everywhere show at most 2 MB per file ("too large", with the size, and an 
 
 ### Reading a diff
 
-The diff header has the same controls everywhere (Changes, History, a file's history, Stashes and pull requests): additions and deletions, **whitespace** (the ¶ button), context lines, unified or side by side, and wrapping.
+The diff header has the same controls everywhere (Changes, History, a file's history, Stashes and pull requests): additions and deletions, **whitespace** (the ¶ button), context lines, unified or side by side, and wrapping. Wrapping works in long diffs and files too (Content and Blame in Files have the same button); the line at the top of the view stays there when you turn it on or off.
 
 **Whitespace.** Choose **Show whitespace changes** (the default), **Ignore changes in amount of whitespace** (like `git diff -b`: re-indenting and trailing spaces don't count, but a space added where there was none does) or **Ignore all whitespace** (`git diff -w`). The choice is remembered and is also in **Settings › Git › Whitespace changes**. A file whose only changes are whitespace says so, with a button to show them. While whitespace is hidden, hunks and lines can't be staged, unstaged or discarded one by one (the diff on screen isn't the file's real diff, so its patch wouldn't apply); whole files still can. Pull request diffs come from GitHub without a whitespace option, so GitSimple hides the whitespace-only lines itself; the hunk headers keep GitHub's line ranges.
 
 **Hidden lines.** The bar above each block says how many unchanged lines are hidden before it. Its buttons show 20 more lines below the previous block or above this one, or all of them; after the last block a bar shows the rest of the file. **Hide** (the fold icon) puts expanded lines away again. The lines are read from the file's new version (the working tree, the staged file, the commit or the stash) the first time you expand, so they take a moment; if the file changed since the diff was loaded, refresh first. Pull request diffs expand from the head commit when you have a clone that has fetched it. New and deleted files have nothing hidden. The arrow at the start of a block's bar folds the block itself; staging works the same with expanded or folded blocks (lines you selected in a block stay selected while it is folded).
+
+**Where the changes are.** When a diff is taller than what fits on screen, a thin strip on its right shows where the removed (red) and added (green) lines are along the whole file; a side-by-side row with both is half red, half green. Find matches show as yellow lines, the current one brighter. Click the strip to go to that place (a click just next to a small mark goes to the mark). `F7` and `Shift+F7` go to the next and previous change in the diff you last clicked in, and highlight its first line for a moment. The strip is in diffs everywhere and in the conflict resolver (see [Conflict resolver](advanced-git.md#conflict-resolver)).
 
 **Find and go to line.** Press `Ctrl+F` to find in the diff, file or blame you last clicked in (or the one on screen; with several diffs on screen, as in a pull request, click the one you want first): **Enter** / `F3` for the next match, **Shift+Enter** / `Shift+F3` for the previous one, with match case, whole word and regular expression options. It searches all the lines, even in long files where only the visible part is drawn, but not inside folded blocks or hidden lines. `Ctrl+G` goes to a line number (in a diff, the new file's number; a line the diff doesn't show goes to the next line it does). `Esc` closes the bar.
 
@@ -223,6 +249,14 @@ In the issue panel click the branch icon (or press `B`, or use the palette).
 - head / base, conversation and reviews, files changed (see [Reading a diff](#reading-a-diff) for whitespace, hidden lines and find), commits, checks, labels, assignees, requested reviewers, linked issues;
 - add comments (**Attach on GitHub** works as in the [issue panel](issues.md#the-issue-panel): it copies your comment and opens the pull request on GitHub, where you paste it and drag the file in);
 - react to the description, comments and review comments (the same reactions as in the [issue panel](issues.md#the-issue-panel); not on your pending review comments, GitHub allows that only once the review is submitted).
+
+### Sync a fork with its upstream
+
+When the workspace's repository is a fork that is behind the repository it was forked from, a bar above the pull request list says by how many commits its default branch is behind (and how many commits it has of its own). **Open upstream** opens the upstream repository on GitHub.
+
+**Sync fork** (when you can push to the fork) shows the commits that will come in, then brings the fork's default branch up to date on GitHub (GitHub's own "Sync fork"; no clone needed). When the fork's branch has commits of its own, GitHub adds a merge commit; when they conflict with the upstream, GitHub refuses and nothing changes: merge the upstream into the branch in your clone instead.
+
+The sync changes the fork on GitHub, not your clone. When your clone has the default branch checked out, the bar then offers **Pull**, with the usual preview; on another branch, switch to the default branch and pull.
 
 ### Checks: logs and re-runs
 

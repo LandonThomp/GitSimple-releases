@@ -27,6 +27,13 @@ Before an action that could lose uncommitted work runs, and only when you have u
 - A conflicting apply or pop goes to the [conflict resolver](#conflict-resolver).
 - The branch-switch dialog offers **Stash changes and switch** and **Bring changes along**.
 
+**Put-away changes (both modes).** Stashes is hidden in Basic, so the newest stash (the one **Stash…** or **Stash changes and switch** just made) also shows above the file list in Changes, in Changes when there is nothing to commit, and in Home's Status card:
+
+- **Bring back** pops it (behind **Confirm before applying a stash**, as in Stashes). It waits, and says so, while files have conflicts or a merge, rebase or stash apply is open. If it clashes with your files, it stays on the list and the clashing files show in Changes.
+- The title is the message you gave it. Without one, git's own "WIP on main: 1a2b3c4 subject" reads as **Unfinished work, after "subject"** (the last commit when you put the work away); the branch is shown next to it. Stashes shows the same titles.
+- **Remove…** is the Drop preview.
+- **See all in Stashes** opens the Stashes view, also in Basic (on Home only when there is more than one stash).
+
 ## History actions
 
 Right-click a commit in History, or use its "…" menu.
@@ -41,8 +48,21 @@ Right-click a commit in History, or use its "…" menu.
 | **Create tag here** | |
 | **Rebase current branch interactively from here…** | Opens the [rebase editor](#interactive-rebase-editor) |
 | **Rebase current branch onto here…** | |
+| **Find the first bad commit…** | Starts a [search for the commit that broke something](#find-the-first-bad-commit-bisect) with this commit as the good one |
 
 On a branch row: **Rebase current branch onto this branch…** and **Interactive rebase onto this branch…**.
+
+## Find the first bad commit (bisect)
+
+When something worked in an older version and is broken now, git can find the commit that broke it by testing commits halfway in between (`git bisect`). Advanced mode: **Find a bad commit** in the History toolbar, or **Find the first bad commit…** on a commit (it becomes the good one).
+
+1. Pick the **bad** commit (has the problem; HEAD by default) and an older **good** commit (before the problem). **Review** shows the range and about how many commits you will test.
+2. **Start** checks out a commit in the middle (HEAD is detached). Uncommitted changes are put away in a stash named "Auto-stash before bisect" and saved in a snapshot first; bring them back from Put-away changes after you stop.
+3. A banner on every Code view shows the commit to test. Build or run it, then click **Good** (no problem), **Bad** (has the problem) or **Skip** (can't be tested). Each click checks out the next commit.
+4. When it is found, the banner names the first bad commit; **Show commit** opens it in History. If only skipped commits are left, it lists them: one of them is the first bad commit.
+5. **Stop and go back to *branch*** is always in the banner: it ends the search and checks out the branch you started from, at any step. If that branch can't be checked out any more, Stop ends the search on the commit you were testing; switch to a branch in Branches. Stop also reminds you of the stash when it is still there.
+
+A search started in the console with `bisect start` shows in the banner too. If it uses other words than good and bad (`--term-old` / `--term-new`) or `--no-checkout`, finish it in the console or stop it from the banner.
 
 ## Interactive rebase editor
 
@@ -68,7 +88,7 @@ A stash apply with conflicts has no continue or abort in git: resolve the files 
 
 In Changes, select a conflicted file.
 
-- **Base** and the two sides next to each other, and a **Result** editor you can edit by hand.
+- **Base** and the two sides next to each other, and a **Result** editor you can edit by hand. When the result is longer than its box, a strip on its right marks where the conflict blocks still are; click a mark to scroll there (the cursor goes to that line).
 - Per conflict: **Keep yours**, **Keep theirs**, **Keep both (yours first)**, **Keep both (theirs first)**.
 - Whole file: **Use your whole file** / **Use their whole file**. These also handle binary files, delete/modify and add/add conflicts (a side that deleted the file deletes it).
 - **Mark resolved** writes the result and stages it. CRLF and a missing final newline are kept. It is refused while a complete conflict block is left.

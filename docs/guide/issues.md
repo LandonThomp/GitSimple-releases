@@ -28,7 +28,7 @@ A GitHub issue tracker for the active repository. The issue views never need a l
 - Columns follow the order of the status options; all of them show by default.
 - Moving a card into a closing status closes the issue; moving it out reopens it.
 - Hide or collapse columns. The choice is remembered per workspace.
-- In label mode, **Add column** (after the last column) creates a status: type a name such as `In progress` and GitSimple creates the label `status: In progress` on GitHub (with your prefix). It needs write access to the repository and is hidden when the status label prefix is empty. With a Project, add an option to the Project's status field on GitHub instead.
+- In label mode, **Add column** (after the last column) creates a status: type a name such as `In progress` and GitSimple creates the label `status: In progress` on GitHub (with your prefix). It needs write access to the repository and is hidden when the status label prefix is empty. With a Project, add an option to the Project's status field on GitHub instead. Advanced mode only: GitSimple can't delete a status label again, so Basic doesn't offer it.
 
 ### Sprints
 

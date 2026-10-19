@@ -46,6 +46,7 @@ Press `G`, then a letter.
 | `Ctrl+F` | Find in the diff, file or blame you last clicked in. `Enter` / `Shift+Enter` in the box for the next / previous match, `Esc` to close |
 | `F3` / `Shift+F3` | Next / previous match |
 | `Ctrl+G` | Go to line (in a diff, the new file's line number) |
+| `F7` / `Shift+F7` | Next / previous change in a diff |
 | `Ctrl+L` | Clear the Console's screen |
 
 ## Issues
