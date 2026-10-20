@@ -14,7 +14,7 @@ Everything that can lose work:
 
 Previews belong to the GitHub login that made them. Actions that discard data, rewrite or delete branches, or change a remote also ask in a Windows dialog right before they run.
 
-Before an action that could lose uncommitted work runs, and only when you have uncommitted work, GitSimple saves it in a **snapshot** (see [Undo](#undo)): discard, hard reset (and Undo with Hard), pull, merge, abort merge, rebase, skip or abort of an operation in progress, delete untracked files, and restoring a snapshot. A dropped or cleared stash is kept the same way. The preview says so, and the result message confirms it.
+Before an action that could lose uncommitted work runs, and only when you have uncommitted work, GitSimple saves it in a **snapshot** (see [Undo](#undo)): discard, hard reset (and Undo with Hard), pull, merge, abort merge, rebase, skip or abort of an operation in progress, delete untracked files, absorb into earlier commits, and restoring a snapshot. A dropped or cleared stash is kept the same way. The preview says so, and the result message confirms it.
 
 ## Stashes
 
@@ -43,11 +43,12 @@ Right-click a commit in History, or use its "…" menu.
 | **Undo this commit's changes (revert)** | Basic and Advanced. A merge commit asks which parent to keep |
 | **Create branch here**, **Copy SHA** | Basic and Advanced |
 | **Compare with current branch** | Basic and Advanced. A Shift-click range offers **Compare oldest and newest selected** (Advanced). See [Compare branches and commits](code.md#compare-branches-and-commits) |
-| **Copy onto current branch (cherry-pick)** | One commit or a Shift-click range, optional `-x` |
+| **Copy onto current branch (cherry-pick)** | One commit or a Shift-click range, optional `-x`. Dragging a commit onto a branch label does the same through a preview (see [History](code.md#history)) |
 | **Move current branch to this commit (reset)…** | Soft, mixed or hard. The preview lists commits no branch will have any more and, for hard, the uncommitted changes that are lost. **Hard needs the branch name typed** |
 | **Create tag here** | |
 | **Rebase current branch interactively from here…** | Opens the [rebase editor](#interactive-rebase-editor) |
 | **Rebase current branch onto here…** | |
+| **Split this commit…** | Stops a rebase at the commit so its changes can be committed in pieces (see [Split a commit](#split-a-commit)) |
 | **Find the first bad commit…** | Starts a [search for the commit that broke something](#find-the-first-bad-commit-bisect) with this commit as the good one |
 
 On a branch row: **Rebase current branch onto this branch…** and **Interactive rebase onto this branch…**.
@@ -75,12 +76,34 @@ Options: "Arrange fixup! and squash! commits (autosquash)" and "Set changes asid
 
 Merge commits in the range are refused: the editor works on straight lines of commits. Git runs without an interactive editor; GitSimple's own executable is git's sequence and message editor.
 
+## Split a commit
+
+*Advanced mode.* One commit became two things at once? **Split this commit…** on a commit in History takes it apart without retyping anything.
+
+1. The preview is the [rebase editor](#interactive-rebase-editor)'s: the commits from this one up to the tip of the branch, with this one marked "stops for editing". It warns when a pushed commit is among them. Your working tree must be clean (commit or stash first).
+2. **Start split** runs the rebase, which stops at the commit. The banner says so and offers **Open for splitting**: the commit's changes come back into Changes as uncommitted changes, and HEAD moves to the commit before it. (You can also change and amend the commit instead, as at any edit stop.)
+3. In Changes, stage the lines for the first piece (whole files, hunks or single lines) and **Commit**; repeat for the next piece until nothing is left. Any number of commits is fine.
+4. **Continue** in the banner replays the commits that came after it on top. Continue waits while something is still uncommitted; the banner says so.
+
+Changed your mind halfway? **Abort** in the banner is the rebase abort: the branch goes back to exactly how it was, the pieces you already committed included. The commit itself is never lost: it stays in the reflog until the rebase ends.
+
+## Absorb into earlier commits
+
+*Advanced mode.* You fixed a typo in a line that one of your last commits added, and want the fix inside that commit rather than as a "fix typo" commit of its own. Stage the fix, then **Absorb into earlier commits…** above the staged list in Changes.
+
+- Each staged change (hunk) goes to the newest **unpushed** commit that last changed those lines (`git blame`); a change that adds lines goes where its neighbouring lines came from. Only commits since the branch's upstream (or, without an upstream, any commit of the branch) are candidates: a change whose lines were last touched by a pushed commit, by a merge commit, by the repository's first commit, or by several commits **stays staged**, and the preview lists it with the reason. Files that are new, deleted, renamed or binary stay staged as a whole.
+- The preview shows, per commit, the changes it gets ("line 12: +1 −1"), what stays staged, the branch before and after (every commit from the oldest target up gets a new id), the pushed warning when one of them is on a remote, and the backup: the branch's current tip is kept under `refs/gitsimple/backup/<time>/<branch>`, never pushed and not shown in History. Undo (Ctrl+Z) can bring it back too.
+- **Absorb** asks once more (a Windows dialog), saves a snapshot of your uncommitted work, backs up the tip, makes one `fixup!` commit per target from exactly its changes and runs the rebase editor's rebase that folds them in (with autostash, so unstaged changes come along). Afterwards the changes that stayed staged are staged again, and unstaged changes are where they were.
+- A conflict while folding in (rare: the changes touch lines a later commit changed nearby) stops the rebase like any other: the banner offers Continue and Abort. After an abort the `fixup!` commits are still on the branch; the backup ref has the tip from before. The changes that stayed staged come back unstaged when the rebase ends: stage them again.
+- If a step fails before the rebase starts (a commit hook refusing a piece, say), GitSimple puts the branch and your staged changes back as they were and says so; the snapshot and the backup ref have them as well.
+
 ## Operation banner
 
 While a rebase, cherry-pick, revert or merge is open, every Code view and Home show a banner with:
 
 - "step N of M" and the commit being applied;
-- **Continue** (needs the conflicts resolved), **Skip** and **Abort** (both previews).
+- **Continue** (needs the conflicts resolved), **Skip** and **Abort** (both previews);
+- at a rebase stopped for editing: **Open for splitting** (see [Split a commit](#split-a-commit)), in both modes.
 
 A stash apply with conflicts has no continue or abort in git: resolve the files and keep working.
 
