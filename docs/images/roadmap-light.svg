@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1012 112" width="1012" height="112" role="img" aria-labelledby="t">
+  <title id="t">Roadmap: the last three releases, what is being built now, and what comes after</title>
+  <g font-family="Segoe UI, -apple-system, Helvetica, Arial, sans-serif" text-anchor="middle" dominant-baseline="central">
+    <text x="0" y="8" fill="#84766B" font-size="12" text-anchor="start">Shipped</text>
+    <text x="506" y="8" fill="#302923" font-size="12" text-anchor="middle">Current</text>
+    <text x="1012" y="8" fill="#84766B" font-size="12" text-anchor="end">Coming soon</text>
+  <line x1="0" y1="100" x2="1012" y2="100" stroke="#DDD3C6" stroke-width="2"/>
+  <g opacity="0.35">
+    <rect x="0.5" y="24" width="135" height="56" rx="10" fill="#FFFCF6" stroke="#DDD3C6"/>
+    <text x="68" y="46" fill="#302923" font-size="14">0.8.0</text>
+    <text x="68" y="65" fill="#84766B" font-size="12">Shipped</text>
+    <circle cx="68" cy="100" r="6" fill="#A15A37"/>
+  </g>
+  <g opacity="0.55">
+    <rect x="146.5" y="24" width="135" height="56" rx="10" fill="#FFFCF6" stroke="#DDD3C6"/>
+    <text x="214" y="46" fill="#302923" font-size="14">0.9.0</text>
+    <text x="214" y="65" fill="#84766B" font-size="12">Shipped</text>
+    <circle cx="214" cy="100" r="6" fill="#A15A37"/>
+  </g>
+  <g opacity="0.8">
+    <rect x="292.5" y="24" width="135" height="56" rx="10" fill="#FFFCF6" stroke="#DDD3C6"/>
+    <text x="360" y="46" fill="#302923" font-size="14">0.9.5</text>
+    <text x="360" y="65" fill="#84766B" font-size="12">Shipped</text>
+    <circle cx="360" cy="100" r="6" fill="#A15A37"/>
+  </g>
+  <g opacity="1">
+    <rect x="438.5" y="24" width="135" height="56" rx="10" fill="#F7E6D9" stroke="#A15A37"/>
+    <text x="506" y="39" fill="#302923" font-size="13">Several GitHub</text>
+    <text x="506" y="54" fill="#302923" font-size="13">accounts</text>
+    <text x="506" y="69" fill="#84766B" font-size="12">Being built now</text>
+    <circle cx="506" cy="100" r="7" fill="none" stroke="#A15A37" stroke-width="2.5"/>
+  </g>
+  <g opacity="0.75">
+    <rect x="584.5" y="24" width="135" height="56" rx="10" fill="#FFFCF6" stroke="#DDD3C6"/>
+    <text x="652" y="46" fill="#302923" font-size="14">GitLab</text>
+    <text x="652" y="65" fill="#84766B" font-size="12">Planned</text>
+    <circle cx="652" cy="100" r="6" fill="none" stroke="#84766B" stroke-width="2"/>
+  </g>
+  <g opacity="0.5">
+    <rect x="730.5" y="24" width="135" height="56" rx="10" fill="#FFFCF6" stroke="#DDD3C6"/>
+    <text x="798" y="39" fill="#302923" font-size="13">Perforce</text>
+    <text x="798" y="54" fill="#302923" font-size="13">workspaces</text>
+    <text x="798" y="69" fill="#84766B" font-size="12">Planned</text>
+    <circle cx="798" cy="100" r="6" fill="none" stroke="#84766B" stroke-width="2"/>
+  </g>
+  <g opacity="0.3">
+    <rect x="876.5" y="24" width="135" height="56" rx="10" fill="#FFFCF6" stroke="#DDD3C6"/>
+    <text x="944" y="46" fill="#302923" font-size="14">Translations</text>
+    <text x="944" y="65" fill="#84766B" font-size="12">Planned</text>
+    <circle cx="944" cy="100" r="6" fill="none" stroke="#84766B" stroke-width="2"/>
+  </g>
+  </g>
+</svg>

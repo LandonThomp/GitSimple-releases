@@ -65,13 +65,22 @@ One page per topic:
 - **[Keyboard shortcuts](docs/guide/shortcuts.md)**
 
 <!-- roadmap:start: copied from docs/roadmap.md in the GitSimple source repo on each release. Edit it there; changes here are overwritten. -->
-## Planned
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/roadmap-dark.svg">
+  <img alt="Roadmap: the last three releases, what is being built now, and what comes after" src="docs/images/roadmap-light.svg" width="100%">
+</picture>
 
-- **More hosts**: GitLab in a later release (issues, merge requests, CI status, on the host boundary 0.6.0 put in place), then Azure DevOps and Bitbucket
+## Current
+
 - **Several GitHub accounts**: sign in with more than one github.com account (work and personal, say) and choose which one each repository uses, together with the other hosts
+
+## Coming soon
+
+- **GitLab**: issues, merge requests and CI status, on the host boundary 0.6.0 put in place
 - **Perforce workspaces**: a workspace whose code is on a Perforce server (issues stay on GitHub), plus the tracker features still missing (Severity, Component, Backlog)
 - **Translations**: the first languages. Everything the app shows can be translated now, including its error and preview messages; what's left is choosing languages and reviewers. Native dialogs, Windows notifications and the tray menu stay English until then
 - **GitHub Enterprise**: notifications from an Enterprise Server in the Inbox, GitHub Projects mode and CI job logs on a server
+- **More hosts**: Azure DevOps and Bitbucket after GitLab
 
 Plans can change, and nothing here has a date.
 <!-- roadmap:end -->
