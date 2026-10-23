@@ -6,11 +6,11 @@ Sign in, add a repository, and let **Home** tell you what to do next.
 
 ## Signing in
 
-GitSimple uses GitHub's **device flow**:
+Signing in takes three steps (GitHub's **device flow**); you never type a password into GitSimple:
 
-1. Click **Sign in with GitHub**. Your browser opens `github.com/login/device` and the app shows a short code.
-2. Enter the code on GitHub and approve the requested scopes: `repo`, `read:org`, `project`.
-3. The app notices the approval and continues.
+1. **Welcome.** Click **Sign in with GitHub**. **How sign-in works** (folded) says where the sign-in is kept and what GitSimple asks GitHub for: `repo`, `read:org`, `project`.
+2. **Approve in your browser.** Your browser opens `github.com/login/device`, and GitSimple has already copied the short code: paste it there and approve. If the copy didn't work, the code is shown large with a copy button. GitHub approves whichever account your browser is signed in to, so switch accounts on github.com first if it's the wrong one.
+3. **You're signed in.** GitSimple shows your account. **Not you?** signs it out so you can start over; **Continue** (or **Add your first repository** on a fresh install) opens the app.
 
 | | |
 | --- | --- |
@@ -28,7 +28,7 @@ GitSimple uses GitHub's **device flow**:
 If your company runs its own GitHub (GitHub Enterprise Server), you can use its repositories too, with or without a github.com account.
 
 1. Your administrator registers an OAuth app for GitSimple on the server, with **Enable Device Flow** turned on, and gives you its **client ID**.
-2. On the sign-in screen click **GitHub Enterprise Server** (or, once signed in, go to Settings, Account, **Add a server**). Enter the server's address (`https://github.example.com`) and the client ID, then **Add server**. GitSimple asks you to confirm in a Windows dialog, because it lets the app contact that server.
+2. On the sign-in screen click **Use a company GitHub server** (or, once signed in, go to Settings, Account, **Add a server**). Enter the server's address (`https://github.example.com`) and the client ID, then **Add server**. GitSimple asks you to confirm in a Windows dialog, because it lets the app contact that server.
 3. Click **Sign in to github.example.com** and enter the code on the server, as for github.com.
 
 | | |

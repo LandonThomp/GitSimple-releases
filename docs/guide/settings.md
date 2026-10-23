@@ -278,6 +278,10 @@ Updates come from the published releases of `LandonThomp/GitSimple-releases`. Th
 
 Your github.com sign-in (or the server sign-in the app is open on) and **Sign out**. Below it, **GitHub Enterprise Server** (collapsed in Basic mode until you add a server): the servers you added, each with its own **Sign in** / **Sign out**, and the trash button to remove one (refused while a repository on it is still added). **Add a server** asks for the server's address and the OAuth app client ID; see [Signing in to GitHub Enterprise Server](getting-started.md#signing-in-to-github-enterprise-server).
 
+**Your accounts.** Every account you're signed in to, grouped by GitHub (github.com first), with **Default** on the one repositories use unless you choose another. Each row's **…** menu has **Make default** and **Sign out**. **Add another account** signs in one more: GitHub adds whichever account your browser is signed in to, so switch accounts on github.com first. An account that isn't on the GitSimple invite list isn't added (the dialog says so); signing in again as an account you already have adds nothing.
+
+**Which account a repository uses.** When you're signed in to more than one account on the same GitHub (a work and a personal github.com account, say), each repository uses one of them for its pushes, pulls, issues and pull requests: **Settings > Workspaces > GitHub account**. Adding a repository picks for you: your default account when it can see the repository, otherwise the first of your other accounts that can. The choice is saved at once. If a repository's account is signed out, a red bar at the top says so, with **Sign in again** and a button to use your default account instead.
+
 ## Notifications
 
 See [Inbox](inbox.md) for what these do.

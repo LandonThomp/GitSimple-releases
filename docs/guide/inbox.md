@@ -15,6 +15,7 @@ Notifications are grouped by repository, the most recent first. Each row shows t
   - Anything else (another repository, a release, a CI run, a commit, a discussion) opens on github.com in your browser.
 - Click the check mark at the end of a row to mark it read without opening it. Hover a row's title to see it in full.
 - **Mark all as read** marks everything up to the newest notification in the list, folded ones included; one that arrives after that stays unread.
+- **Several GitHub accounts.** Signed in to more than one github.com account? The Inbox shows all of their notifications in one list, and each row names the account it is for. The menu next to **Unread** shows one account's notifications only; **Mark all as read** then marks only that account's. Marking a notification read always does it as the account it names.
 
 GitSimple asks GitHub for notifications about once a minute (as often as GitHub allows), also while the window is minimised or hidden in the tray. Unchanged answers don't count against your GitHub rate limit. Your existing sign-in is enough; no extra permission is asked for.
 
