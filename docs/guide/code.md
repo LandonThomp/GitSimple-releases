@@ -6,7 +6,9 @@ The everyday git work. The Code views need a local clone, except **Pull requests
 
 ## Changes
 
-Four lists: **Conflicted**, **Ready to commit** (staged), **Changes** and **New files** (untracked). Show them flat or by folder; select several with Ctrl / Shift. Drag the border between the lists and the diff to make the file list wider or narrower (or focus it and use Left / Right); the width is remembered.
+The file list is on the left, the commit box under it, and the diff of the selected file on the right. The list has up to four groups: **Conflicted**, **In this snapshot** (staged), **Not included** (changed, not staged) and **New files** (untracked). Each file has a checkbox: ticked files are in the next snapshot (commit). Tick or untick a box to add a file to the snapshot or take it out (stage / unstage); with a folder tree, a folder's box does the whole folder. **Add all** and **Take all out** at the top of a group do every file in it. **Discard all changes…** is in the group's **…** menu, apart from the other buttons, and shows a preview before anything is thrown away (Undo, `Ctrl+Z`, brings it back). With the keyboard, select files with the arrow keys (Shift for a range) and press Space to add or take them out.
+
+Show the list flat or by folder; select several with Ctrl / Shift. Drag the border between the left column and the diff to make the file list wider or narrower (or focus it and use Left / Right); the width is remembered.
 
 **Choose what goes in the commit:**
 
@@ -16,10 +18,12 @@ Four lists: **Conflicted**, **Ready to commit** (staged), **Changes** and **New 
 
 **Write the commit:**
 
-- a summary (a hint appears past 72 characters) and an optional description;
-- an optional issue key (the workspace's prefix, `#` or `GS-`, is added);
+- a **Summary** (the counter beside it turns to a warning past 72 characters) and an optional **Description**;
+- **For**: the issue the commit belongs to (taken from the branch name when it names one; pick another or remove it). The workspace's prefix, `#` or `GS-`, is added to the message;
 - optional **co-authors**: pick people who worked on it with you from the recent authors of the repository and its GitHub users (their GitHub noreply address, so GitHub credits their account; for a repository on a GitHub Enterprise Server, only the recent authors for now, and the picker says so), or type `Name <email>` for anyone else. Each gets a `Co-authored-by:` line at the end of the message (no need to type those lines). You are never added as your own co-author, and the same person is added once;
 - **Commit**. With nothing staged the button reads **Stage all and commit**.
+
+**More options** (Advanced mode, beside **For**) opens the co-authors and **Add to last commit (amend)**. It stays open while you amend or have co-authors picked.
 
 **Message helpers** (off until you turn them on for the repository in [Settings > Git > Advanced](settings.md#advanced), under **Commit message helpers**):
 
@@ -31,11 +35,11 @@ The commit box always puts a blank line between the summary and the description,
 
 **Add to last commit (amend)** shows what it replaces and warns when that commit is already pushed. While amending, the picker shows the last commit's co-authors (not the description), so you can add or remove them; they are written back once. Co-authors picked for your next commit come back when you turn amend off. Co-authors are read from the message's final block of `Key: value` lines only; a line mixed in with other text stays in the description.
 
-**Who commits:** under the message the box shows the name and email git will use (hover to see which configuration each comes from: this repository, your global config, ...). When the repository has an identity chosen under **Settings > Workspaces > Commit as** and git would use another one, the box says so; **Apply…** shows the change to the repository's `.git/config` (old and new `user.name` / `user.email`) and writes it when you confirm. Nothing else in your git configuration is changed. See [Identities](settings.md#identities).
+**Who commits:** under the message the box shows the name and email git will use (hover to see which configuration each comes from: this repository, your global config, ...). When the repository has an identity chosen under **Settings > Workspaces > Commit as** and git would use another one, the box says so; **Apply…** shows the change to the repository's `.git/config` (old and new `user.name` / `user.email`) and writes it when you confirm. Nothing else in your git configuration is changed. See [Identities](settings.md#identities-collapsed-in-basic-mode-until-you-have-one).
 
 When git has no name or email at all, the box says **Commits need your name and email**. With no saved identities, **Set name and email…** asks for them, saves them as an identity, chooses it for this repository and shows the usual preview of writing it into the repository's config; with saved identities, **Choose identity…** opens Settings > Workspaces.
 
-On a small window the file list keeps at least about a third of the column; the commit box and its warnings scroll, and the **Commit** button stays in view.
+On a small window the file list keeps at least about half of the column; the commit box and its warnings scroll, and the **Commit** button stays in view.
 
 **Signed commits:** GitSimple follows your git configuration. With `commit.gpgsign` on, the box says **Commits will be signed (SSH)** (or GPG, X.509) and git signs as usual with `gpg.format`, `user.signingkey` and `gpg.program` / `gpg.ssh.program`. There is no switch in GitSimple. git runs without a console window, so a signer can't ask for a passphrase in a terminal:
 
@@ -72,18 +76,17 @@ Right-click a file in **New files** and open **Ignore**:
 
 A preview shows the exact line, the file it is added to (created when missing) and the new files it hides. **Ignore** adds the line at the end of the file in the file's own line endings; nothing else in it changes. The files leave **New files** right away. Commit the `.gitignore` so the whole team ignores them. Special characters in names (`*`, `?`, `[`) are escaped, so the rule only matches that name.
 
-Ignoring doesn't affect files git already tracks. For those, right-click the file in **Changes** or **Ready to commit** and choose **Stop tracking (keep on disk)**. A preview lists the files; confirming runs `git rm --cached`: the files stay in your folder and show as new files, and the removal is staged. When you commit it, the files are removed from the repository, and everyone who pulls that commit has them deleted from their folder, so ignore them as well.
+Ignoring doesn't affect files git already tracks. For those, right-click the file in **Not included** or **In this snapshot** and choose **Stop tracking (keep on disk)**. A preview lists the files; confirming runs `git rm --cached`: the files stay in your folder and show as new files, and the removal is staged. When you commit it, the files are removed from the repository, and everyone who pulls that commit has them deleted from their folder, so ignore them as well.
 
 ## Sync: check, pull, push
 
-These buttons are in the header of every Code view, with progress and **Stop**:
+These buttons are in the header of every Code view, with progress and **Stop**. Basic mode uses everyday words; the git term is in each button's tooltip.
 
-| Button | What it does |
-| --- | --- |
-| **Check for new commits** | `git fetch`: looks for new commits without changing your files |
-| **Pull** | Brings new commits into your branch |
-| **Push** | Uploads your commits. A branch with no remote copy shows **Publish branch** instead |
-| **Overwrite remote branch (force push)…** | Advanced mode, under the arrow next to Push. Uses a lease, previews the remote commits it would discard, never a plain force push |
+| Basic | Advanced | What it does |
+| --- | --- | --- |
+| **Get updates** | **Check for new commits**, then **Pull** | Basic: one button that looks for new snapshots and opens the pull preview to bring them into your branch (`git fetch`, then `git pull`). On a branch with no remote copy it only looks (`git fetch`). Advanced: the two steps as separate buttons |
+| **Share N snapshots** | **Push N** | Uploads your snapshots (commits). A branch with no remote copy shows **Publish branch** instead |
+| | **Overwrite remote branch (force push)…** | Advanced mode, in the **…** menu next to Push. Uses a lease, previews the remote commits it would discard, never a plain force push |
 
 Pull, push and anything that can lose work (discard, delete branch, merge, amend) first show a **preview** of exactly what will happen. A preview works once, and only if nothing changed since. A rejected push tells you to pull first.
 
@@ -109,7 +112,7 @@ A repository can have its own checks, such as its tests or a linter, that run wh
 
 ## Branches
 
-Local and remote branches with their upstream, ahead / behind and last commit. A branch whose remote copy is gone is marked "deleted on the remote".
+At the top, **You're working on** names the current branch and says what isn't shared yet and what is new on GitHub (or your company server). Below it, **Find a branch** and **Mine / Everyone's**: Mine lists your branches on this computer, Everyone's also unfolds the branches on the server (the folded line "N branches on GitHub" does the same). Each branch shows its last commit and its state in words: **N snapshots to share** (commits not pushed yet), **N new to get** (commits to pull), **Up to date**, **Only on this computer** (no upstream yet) or "deleted on the remote"; hover the state for the git words. **Switch** is on each row, the rest in its **…** menu.
 
 - **Create** from HEAD or any branch or commit, **switch**, **rename**, **delete**.
 - **Choose remote branch (upstream)…** (Advanced mode).
@@ -147,9 +150,11 @@ Advanced mode. A branch can be kept **on top of** another one: a chain like `mai
 
 ## History
 
+![History: the commit list with its branch graph, and the selected commit's files and diff](../images/history.png)
+
 - A paged commit list with a lane graph, branches and tags. The commit message gets the room: in a narrow list the branch and tag labels shorten (hover for the full names), and the author and commit id columns show once the list is wide enough.
 - **Your changes, not committed yet:** while your working folder has changes (in a repository that has commits), the first row is "Your changes, not committed yet (N changed files)", drawn as a dashed ring on the current branch's line, above its newest commit. Select it (or press Up from the first commit) to see the same files and diffs as Changes, read-only; **Open Changes** goes there to stage, discard or commit. The row disappears when the changes are committed or discarded, and it is hidden while a filter is on.
-- Filters: text, author, path, all branches. With a path filter, a selected commit opens on that file (or the first changed file in that folder) instead of the commit's first file. The path filter matches the name you type; to follow a file across renames, use its [History tab](#a-files-history) in Files.
+- Filters: **All branches / Only** *your branch* at the top, text, author, path. With a path filter, a selected commit opens on that file (or the first changed file in that folder) instead of the commit's first file. The path filter matches the name you type; to follow a file across renames, use its [History tab](#a-files-history) in Files.
 - A badge on a signed commit's details: **Signed** (verified), **Signed, key not trusted**, **Signed, expired**, **Signed, key revoked**, **Bad signature**, or **Signed, unverified** when git can't check it (no key, no gpg; for SSH signatures set `gpg.ssh.allowedSignersFile` to verify them). Hover it for the signer and key. The commit list itself never checks signatures (that would start gpg for every row).
 - Commit details with per-file diffs. Drag the border between the commit list and the details to make them wider or narrower, and the borders under the commit message and the file list to make those taller or shorter (or focus a border and use the arrow keys); the sizes are remembered.
 - **Copy SHA**, **Create branch here**, and the [advanced actions](advanced-git.md#history-actions) (right-click a commit, or its "…" menu).
@@ -215,7 +220,7 @@ Diffs everywhere show at most 2 MB per file ("too large", with the size, and an 
 
 ### Reading a diff
 
-The diff header has the same controls everywhere (Changes, History, a file's history, Stashes and pull requests): additions and deletions, **whitespace** (the ¶ button), context lines, unified, side by side or **Words** (see below), and wrapping. Wrapping works in long diffs and files too (Content and Blame in Files have the same button); the line at the top of the view stays there when you turn it on or off.
+The diff header has the same controls everywhere (Changes, History, a file's history, Stashes and pull requests): additions and deletions, **whitespace** (the ¶ button), context lines, the layout (**Inline**, **Side by side** or **Words**, see below; Inline is git's unified diff), and wrapping. Wrapping works in long diffs and files too (Content and Blame in Files have the same button); the line at the top of the view stays there when you turn it on or off.
 
 **Whitespace.** Choose **Show whitespace changes** (the default), **Ignore changes in amount of whitespace** (like `git diff -b`: re-indenting and trailing spaces don't count, but a space added where there was none does) or **Ignore all whitespace** (`git diff -w`). The choice is remembered and is also in **Settings › Git › Whitespace changes**. A file whose only changes are whitespace says so, with a button to show them. While whitespace is hidden, hunks and lines can't be staged, unstaged or discarded one by one (the diff on screen isn't the file's real diff, so its patch wouldn't apply); whole files still can. Pull request diffs come from GitHub without a whitespace option, so GitSimple hides the whitespace-only lines itself; the hunk headers keep GitHub's line ranges.
 
@@ -225,9 +230,9 @@ The diff header has the same controls everywhere (Changes, History, a file's his
 
 **Find and go to line.** Press `Ctrl+F` to find in the diff, file or blame you last clicked in (or the one on screen; with several diffs on screen, as in a pull request, click the one you want first): **Enter** / `F3` for the next match, **Shift+Enter** / `Shift+F3` for the previous one, with match case, whole word and regular expression options. It searches all the lines, even in long files where only the visible part is drawn, but not inside folded blocks or hidden lines. `Ctrl+G` goes to a line number (in a diff, the new file's number; a line the diff doesn't show goes to the next line it does). `Esc` closes the bar.
 
-In a changed line, the words that actually changed have a stronger background, in both unified and side by side views. A removed line is compared with the added line that replaced it (the first removed line of a block with the first added one, and so on). Lines that were rewritten rather than edited, lines over 1,000 characters and blocks where far more lines were added than removed (or the other way round) keep the plain line colour. A line whose only change is its line ending (CRLF and LF) shows as removed and added with nothing emphasised.
+In a changed line, the words that actually changed have a stronger background, in both the Inline and Side by side layouts. A removed line is compared with the added line that replaced it (the first removed line of a block with the first added one, and so on). Lines that were rewritten rather than edited, lines over 1,000 characters and blocks where far more lines were added than removed (or the other way round) keep the plain line colour. A line whose only change is its line ending (CRLF and LF) shows as removed and added with nothing emphasised.
 
-**Words.** The third layout button shows the changes as running text, with removed words struck through in red and added words underlined in green, like `git diff --word-diff`. Removed and added lines are compared word by word across line breaks, so a paragraph that was re-wrapped shows only the words that really changed. Prose files (Markdown, `.txt`, `.rst`, `.adoc` and similar) open in Words; other files open in Unified or Side by side, and any diff can switch. The choice is remembered separately for prose files and for other files. In Words, whole blocks can still be staged, unstaged or discarded from the bar above each block; single lines and Find (`Ctrl+F`) need Unified or Side by side. Changes in whitespace alone (extra spaces, line endings) aren't marked, but a paragraph that was split or joined is. Pull request diffs, where comments sit on lines, and diffs over 5,000 lines always show as lines. Very large blocks, where comparing every word would take too long, show the old text removed and the new text added.
+**Words.** The third layout shows the changes as running text, with removed words struck through in red and added words underlined in green, like `git diff --word-diff`. Removed and added lines are compared word by word across line breaks, so a paragraph that was re-wrapped shows only the words that really changed. Prose files (Markdown, `.txt`, `.rst`, `.adoc` and similar) open in Words; other files open in Inline or Side by side, and any diff can switch. The choice is remembered separately for prose files and for other files. In Words, whole blocks can still be staged, unstaged or discarded from the bar above each block; single lines and Find (`Ctrl+F`) need Inline or Side by side. Changes in whitespace alone (extra spaces, line endings) aren't marked, but a paragraph that was split or joined is. Pull request diffs, where comments sit on lines, and diffs over 5,000 lines always show as lines. Very large blocks, where comparing every word would take too long, show the old text removed and the new text added.
 
 ### Unity files, package files and images
 
@@ -306,9 +311,9 @@ The issue panel shows where the issue is (**Start**, **Work**, **Review**, **Mer
 
 **Pull requests** sits between Branches and History and works without a clone.
 
-**The list:** open / closed / merged, author, "review requested from me", search; checks, review decision, draft and conflict state. Refreshed like issues (focused window only, backs off on rate limits).
+**The list:** the tabs **Waiting on you** (your review is asked for), **Mine** (you opened them), **All open**, then **Closed** and **Merged**, each with its count; an author filter on the other tabs, and search. Each row shows its checks, review decision, draft and conflict state. **New pull request** is the screen's filled button until a pull request is open beside the list. Refreshed like issues (focused window only, backs off on rate limits).
 
-**The detail pane:**
+**The detail pane:** under the title, three plain checks say where the pull request stands: **Checks** (passed, running or failing; click it for the Checks tab), **Combining** (no conflicts, conflicts with the base branch, or what blocks the merge) and **Review** (approved, changes asked for, or waiting for a review). Then:
 
 - edit the title and text (a change made on GitHub meanwhile is offered as reload or overwrite);
 - head / base, conversation and reviews, files changed (see [Reading a diff](#reading-a-diff) for whitespace, hidden lines and find), commits, checks, labels, assignees, requested reviewers, linked issues;
@@ -331,6 +336,22 @@ The **Checks** tab lists the checks of the latest commit. For a job that ran on 
 - **Re-run** (the circular arrow): this job, the failed jobs of the workflow run (when the job failed) or all of its jobs. GitSimple asks first, because a re-run uses your GitHub Actions minutes. If GitHub refuses, for example because a run from a fork waits for a maintainer's approval, its reason is shown; approve the run on GitHub, then try again.
 
 Other checks (other apps, commit statuses) open on GitHub with the arrow button. On a GitHub Enterprise Server re-runs work, but logs can't be shown in the app yet, so **Show log** isn't there: open the log on the server.
+
+**GitLab pipelines.** For a GitLab project the Checks tab lists the jobs of the commit's newest pipeline (one row per job, its stage as the detail), plus commit statuses that other tools set. A job that failed but is allowed to fail shows as neutral, a manual job nobody started as neutral too. **Show log** is the job's trace, cleaned of color codes and of the section markers GitLab Runner writes; a trace over 25 MB shows its end. **Re-run** retries this job, or the failed jobs of the pipeline (needs the Developer role or better). GitLab has no "run everything again" on a pipeline, so that choice isn't offered; start a new pipeline on GitLab instead. The re-run confirmation doesn't mention GitHub Actions minutes there.
+
+### Merge requests on GitLab
+
+On a GitLab project the same screen shows merge requests. The side menu item, the view title, the **New merge request** and **Create merge request** buttons, the merge dialog title and the command palette say "merge request"; longer sentences elsewhere (confirmations, for example) still say "pull request". Merge requests are numbered the GitLab way, `!12` (issues stay `#12`), in the list, the header, the palette, the merge dialog ("Merge !12") and on Home. What differs from GitHub:
+
+- **Draft** is GitLab's `Draft:` title prefix. GitSimple hides the prefix in the title and shows the draft badge; **Mark ready / Convert to draft** adds or removes it.
+- **Combining and Review** follow GitLab's own merge status. A project can require a passing pipeline, approvals, resolved discussions or external checks: the merge is then refused with that reason, and **Merge anyway** doesn't get past it. **Merge anyway** exists only for a failing or unfinished pipeline the project doesn't require. There is no administrator bypass. Approvals are read where the GitLab edition has them; on the Free tier the Review check shows no decision.
+- **Merge** offers **Merge** and, when the project allows it, **Squash and merge**. The merge uses the project's own method (a merge commit, or fast-forward). It sends the head commit the preview showed, so GitLab refuses it when someone pushed in between. There is no rebase merge from GitSimple.
+- **Checks** are the jobs of the head commit's newest pipeline (see [Checks: logs and re-runs](#checks-logs-and-re-runs)).
+- **Review.** An inline comment is posted at once (GitLab has no pending review yet) and belongs to one line; a range of lines isn't supported. **Review** in the header offers **Approve** and **Comment**; GitLab can't be asked to request changes from here. Conversations on the diff resolve and reopen as on GitHub; a conversation made on an earlier version of the diff shows as outdated.
+- **Reviewers, labels and assignees** are set in the same request that creates the merge request. GitLab Free allows one assignee.
+- **Delete branch** and "Delete branch after merge" delete the source branch of the project. A branch of a fork, the default branch, a protected branch, and a branch another open merge request uses are kept, with the reason.
+- **After merge** closes the issue (when the merge request refers to it with `Closes #N`), deletes the source branch and cleans up your clone, after a preview.
+- **Not on GitLab yet:** the files-viewed marks, the "other pull requests that change the same files" warning, and the number of added and removed lines in the list (the files changed show them).
 
 ### Other pull requests that change the same files
 

@@ -2,7 +2,7 @@
 
 # Inbox
 
-Your GitHub notifications, from every repository, in GitSimple. They come from your github.com sign-in; notifications from a GitHub Enterprise Server aren't shown yet, and while the app is open on a server's sign-in only (no github.com sign-in) the Inbox isn't in the sidebar, the palette or Settings. Open it from **Inbox** in the sidebar (under Home), with `G` then `N`, or from the command palette. The number on **Inbox** is how many are unread ("50+" when there are more than GitSimple fetched).
+Your GitHub notifications, from every repository, in GitSimple. They come from your github.com sign-in; notifications from a GitHub Enterprise Server or GitLab aren't shown yet, and while the app is open on a server's or GitLab's sign-in only (no github.com sign-in) the Inbox isn't in the sidebar, the palette or Settings. Open it from **Inbox** in the sidebar (under Home), with `G` then `N`, or from the command palette. The number on **Inbox** is how many are unread ("50+" when there are more than GitSimple fetched).
 
 ## Reading the list
 

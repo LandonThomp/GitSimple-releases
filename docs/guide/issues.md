@@ -2,13 +2,13 @@
 
 # Issues
 
-A GitHub issue tracker for the active repository. The issue views never need a local clone; they read and write GitHub with your GitSimple sign-in.
+An issue tracker for the active repository's GitHub or GitLab issues. The issue views never need a local clone; they read and write the host with your GitSimple sign-in.
 
 ## The views
 
 | View | What it shows |
 | --- | --- |
-| **Overview** | The active sprint (when a Project has a sprint field), recently updated issues, your open issues, open issues by priority and by type |
+| **Overview** | Tiles: how many issues are open, closed this week and assigned to nobody, the active sprint (when a Project has a sprint field) with its progress and a count per status, your open issues, recently updated issues, open issues by priority and by type. Click **Open**, **Nobody assigned** or a bar to open the list with that filter |
 | **Issues** | A list you can group, sort, filter and search (see below) |
 | **Board** | One column per status. Drag a card to change its status |
 | **Sprints** | Active, Upcoming (with a planning pool) and History. Needs a Project with an iteration field. Hidden in Basic mode |
@@ -17,16 +17,18 @@ A GitHub issue tracker for the active repository. The issue views never need a l
 ### Issues list
 
 - **Group** by status, priority, assignee or sprint, and **sort**.
-- **Filter** by status, priority, labels, assignee, milestone, sprint, type, open / closed.
+- **Filter** by status, priority, labels, assignee, milestone, sprint, type, open / closed. Status, priority and labels have their own dashed buttons in the toolbar while they're unused; **Filters** holds all of them. Each active filter shows as a chip ("Status: Todo") with an **x** to remove it.
 - **Search** by text, `#42`, or your key prefix such as `GS-42`.
 - **My issues / All** quick toggle.
 - Select several for **bulk actions**. A bulk change reports how many issues were updated and why the others failed.
-- **Display options**: which fields show (key, labels, assignee avatars, priority, estimate, sprint) and the density.
+- **Display options**: which fields show (key, labels, assignee avatars, priority, estimate, sprint) and the density. A row shows its first label; **+N** lists the others.
+- **New issue** is at the top right. While an issue is open in the panel it is an outlined button, because the panel's own button (such as **Start work**) is then the main one.
 - **Save view** keeps the current filter, sort, grouping and scope under a name. Saved views appear in the sidebar under Issues (per workspace), where you can rename or delete them.
 
 ### Board
 
-- Columns follow the order of the status options; all of them show by default.
+- Columns follow the order of the status options; all of them show by default. Cards assigned to you have an outline in the accent colour.
+- **New issue** at the bottom of a column creates an issue in that column's status.
 - Moving a card into a closing status closes the issue; moving it out reopens it.
 - Hide or collapse columns. The choice is remembered per workspace.
 - In label mode, **Add column** (after the last column) creates a status: type a name such as `In progress` and GitSimple creates the label `status: In progress` on GitHub (with your prefix). It needs write access to the repository and is hidden when the status label prefix is empty. With a Project, add an option to the Project's status field on GitHub instead. Advanced mode only: GitSimple can't delete a status label again, so Basic doesn't offer it.
@@ -37,7 +39,7 @@ Creating, renaming and re-dating sprints is off until you allow it in Settings, 
 
 ## The issue panel
 
-Click an issue to open it.
+Click an issue to open it. The panel shows, top to bottom: the issue's number (click to copy), **Close** or **Reopen**, **Open on GitHub**, expand and close; the title; the progress card ("Ready to work on it?" with **Start work** before any work, then the stages); the properties as a two-column grid; the description; relations and development; and the comment box, with the thread folded behind "N comments · Show".
 
 - Edit the title and description. A change made on GitHub meanwhile is detected per field and offered as reload or overwrite.
 - Tick or untick a task-list box (`- [ ] item`) in the description to save the description with just that box changed. Boxes in comments are read-only.
@@ -49,7 +51,7 @@ Click an issue to open it.
 - Relations: parent, sub-issues, blocked by, blocking, mentioned in.
 - **Sub-issues** break an issue into parts that must be finished first, such as "Server enhancements" with one sub-issue per change:
   - **Add** attaches an existing open issue; **New** creates an issue with just a title and attaches it. An issue can have only one parent: GitHub refuses one that already has a parent, and an issue that is above this one.
-  - The heading counts how many are done. Hover a sub-issue and click **x** to remove it from the list (the issue itself stays).
+  - The heading counts how many are done ("1 of 3 done"). Hover a sub-issue and click **x** to remove it from the list (the issue itself stays).
   - When every sub-issue is closed and the issue is still open, the panel offers **Close #N as completed**. Nothing closes on its own.
 - **Development**: linked branches, pull requests and commits (see [Issues and code together](code.md#issues-and-code-together)).
 - The **progress strip** at the top (Start, Work, Review, Merged) offers the next step: branch, commit, push, **Review my changes** (your own look at the branch before asking others, see [Review your own changes first](code.md#review-your-own-changes-first)), pull request, ready for review, clean up. Each stage can be turned off in Settings, Issues.
@@ -58,7 +60,7 @@ Links to other issues of the repository open inside the app; other links open in
 
 ## Creating an issue
 
-**New issue** (shortcut C, the toolbar button, or a board column's **+**) opens a dialog with a title, a description and pickers for status, priority, sprint, estimate, labels, assignees, milestone and type.
+**New issue** (shortcut C, the button at the top right of Overview, Issues and Board, or **New issue** at the bottom of a board column) opens a dialog with a title, a description and pickers for status, priority, sprint, estimate, labels, assignees, milestone and type.
 
 ### Issue templates and issue forms
 
@@ -87,6 +89,19 @@ A GitHub Project is optional. A workspace is in **project mode** when it has a P
 | Priority | The Project's priority field | **Priority labels** (default prefix `priority: `), ordered urgent to low when the names are common ones |
 | Sprints, estimates | The Project's iteration and number fields | Not available ("Link a GitHub Project in Settings to enable sprints") |
 | Closing | A status marked as closing closes the issue with its reason | The same for status labels, plus the built-in Closed column |
+
+### Issues on GitLab
+
+A GitLab repository is always in **label mode**: GitLab has no Projects like GitHub's, so status and priority live in labels.
+
+- **Scoped labels.** A new GitLab workspace reads labels named `status::To do` (the column) and `priority::high`, the way GitLab's scoped labels are written. Change the prefixes in **Settings, Issues** if your project names them differently. On GitLab Free a scoped label is an ordinary label with `::` in its name, so GitSimple removes the old status label itself when an issue moves.
+- **Board order.** The columns follow your project's first issue board in GitLab (**Plan, Issue boards**): the status labels that are lists on that board, left to right. Status labels that aren't on the board come after them. Open and Closed stay at the ends. If the board can't be read, the usual workflow order is used. GitSimple only reads the board; it never changes it.
+- **Closing.** A status that closes (**Done** by default; see Settings, Issues) closes the issue in the same step as it changes the label. GitLab has no close reasons, so closing is a plain Close.
+- **Add column** creates the label `status::<name>` in the project. It needs at least the Reporter role.
+- **Milestones, assignees and comments** are the project's own. Assignees must be members with at least the Reporter role. System notes ("changed the description", "added label") aren't shown as comments.
+- **Reactions** use GitLab's award emoji. GitHub's eight reactions map to 👍 👎 😄 🎉 😕 ❤️ 🚀 👀; other emoji on an issue aren't shown.
+- **Images** uploaded to an issue or committed to the repository load in the issue text. Images need GitLab 17.4 or later for uploads in a private project; otherwise they may not load.
+- **Not available on GitLab:** sprints, estimates, sub-issues, issue types and issue templates.
 
 ### Link a GitHub Project
 

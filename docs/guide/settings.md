@@ -157,8 +157,10 @@ When something fails with a certificate error ("unknown issuer", "unable to get 
 | Setting | Default | Notes |
 | --- | --- | --- |
 | Interface | Basic (new installs) | Basic or Advanced; see [Getting started](getting-started.md#basic-and-advanced-mode). "Reset to defaults" does not change it |
-| Appearance | Dark | Dark, light, or follow the system |
-| Theme family | Obsidian & Copper | Also Midnight Evergreen, Graphite & Blue, Carbon & Teal, Nordic Frost, Ink & Indigo and High Contrast. Each has dark and light. See [High Contrast](#high-contrast) |
+| Theme | Calm | One card per theme, each with a small preview of the window: Calm, Windows, Obsidian & Copper, Midnight Evergreen, Graphite & Blue, Carbon & Teal, Nordic Frost, Ink & Indigo, High Contrast and themes you imported. Each has a dark and a light look. See [High Contrast](#high-contrast) |
+| Follow Windows light and dark | Off (dark) | On: the light or dark look follows Windows. Off: a Dark / Light switch beside it picks one |
+| Highlight colour | The theme's own colour | Replaces the theme's accent: orange, blue, teal, purple, pink or yellow. See [Highlight colour](#highlight-colour) |
+| Show tips | On | A short tip on Home about saving, sharing and undoing work. Hiding the tip on Home turns this off |
 | Code colours | From theme | Also GitHub, One, Solarized, Dracula, or one you imported. See [Code colours](#code-colours) |
 | Diff colours | From theme | Also Colour-blind safe (blue added, orange removed). See [Diff colours](#diff-colours) |
 | Interface font / Code font | Inter / Geist Mono | Any installed font, or a font file you imported. See [Fonts](#fonts) |
@@ -166,6 +168,12 @@ When something fails with a certificate error ("unknown issuer", "unable to get 
 | Code ligatures | On | Fonts that have them join `=>`, `!==` and similar into one sign. Off shows every character on its own |
 | Tab width | 8 | How many spaces a tab takes in code: 2, 4 or 8 |
 | Text size, density, animations | | |
+
+### Highlight colour
+
+**Highlight colour** changes the one accent colour of the window: the main (filled) button on each screen, the bar beside the selected menu item, links and the focus ring. The first swatch, with a dashed edge, keeps the theme's own colour; the others are orange, blue, teal, purple, pink and yellow. The chosen swatch has a ring and a check mark. The theme cards preview the colour you picked.
+
+Text on the highlight colour is chosen automatically (the theme's text, the theme's background, black or white, whichever is readable at 4.5:1 or more), and where the colour is used as text or as the focus ring it is lightened or darkened until it stands out from the background. So every colour stays readable on every theme, light and dark, including High Contrast; a test checks each pair. **Reset to defaults** goes back to the theme's own colour.
 
 ### Custom themes
 
@@ -175,13 +183,14 @@ Rules: `#RRGGBB` colours only, every key of `dark` and `light` required, family 
 
 The `muted` colour is used for secondary text, so it is darkened (or lightened) toward the text colour until it has at least 4.5:1 contrast on the background, panels and hover rows (WCAG AA). A muted colour that is already readable is used as given.
 
-Each family can also have three optional groups. Each has `dark` and/or `light` (no other variants), and each variant may set any of its keys:
+Each family can also have four optional groups. Each has `dark` and/or `light` (no other variants), and each variant may set any of its keys:
 
 | Group | Keys | Colours you leave out |
 | --- | --- | --- |
 | `syntax` (code colours) | `keyword`, `string`, `comment`, `function`, `constant`, `parameter`, `punctuation`, `stringExpression`, `link` | Derived from the theme (keywords in the accent, strings green, functions blue, constants amber, comments in the muted colour) and lightened or darkened until they are readable on the background |
 | `semantic` (status colours: success, errors, warnings) | `success`, `error`, `warning`, `info`, `neutral` | The file's top-level `semantic`, or else the built-in ones |
 | `diff` (diff colours) | `added`, `removed`, `addedEmphasis`, `removedEmphasis`, `conflict` | `added` = `success`, `removed` = `error`, `conflict` = `error`, each emphasis = its line colour |
+| `surfaces` (the window's boxes and rows) | `titleBar`, `menu`, `panel`, `card`, `hover`, `selected` | `titleBar` = `background`, `menu` = the panel, `panel` = `surface`, `card` and `hover` = the panel with a little of the text colour mixed in, `selected` a little more |
 
 The `diff` keys:
 
@@ -191,7 +200,15 @@ The `diff` keys:
 
 `added`, `removed` and `conflict` are shown as text, so they are lightened or darkened until they have at least 4.5:1 contrast on the background (WCAG AA). The emphasis colours are only used as tinted backgrounds and are kept as given. A [diff colour preset](#diff-colours) other than From theme replaces a family's `diff`.
 
-The top-level `semantic` is optional too. When present it needs every key of both variants, and it applies to each family in the file; keys a family sets in its own `semantic` win. **Export current** writes the family's `syntax` and `diff` and puts the status colours in effect in the top-level `semantic`, so the file imports back unchanged under a new name.
+The `surfaces` keys:
+
+- `titleBar`: the title bar. The window ground around the side menu and the content panel stays `background`.
+- `menu`: the side menu box. `panel`: the content panel (and the card under the repository name). `card`: cards inside the panel.
+- `hover`: a row under the pointer. `selected`: the page you are on in the side menu, and the selected row or tab in lists (History, Files, Stashes, the Issues view switcher, the command palette).
+
+Every surface keeps the text colour readable on it (at least 4.5:1); one that doesn't is mixed toward `background` until it does. In dark variants the panel keeps a small step above `background` so it reads as raised, unless that would make the text unreadable (light variants use a shadow instead). `selected` is kept visibly apart from `hover`, so a row under a resting pointer never looks like the page you are on. The muted colour and the side menu's edge are fitted to `menu` and `titleBar` too; the selected row shows its name in the text colour, so pick `selected` with that in mind.
+
+The top-level `semantic` is optional too. When present it needs every key of both variants, and it applies to each family in the file; keys a family sets in its own `semantic` win. **Export current** writes the family's `syntax`, `diff` and `surfaces` and puts the status colours in effect in the top-level `semantic`, so the file imports back unchanged under a new name.
 
 ```json
 {
@@ -207,7 +224,8 @@ The top-level `semantic` is optional too. When present it needs every key of bot
       "diff": {
         "dark":  { "added": "#56B4E9", "removed": "#E69F00", "conflict": "#CC79A7" },
         "light": { "added": "#0072B2", "removed": "#A85300", "conflict": "#A2477B" }
-      }
+      },
+      "surfaces": { "dark": { "menu": "#1F1D1B", "selected": "#3F3A35" } }
     }
   ],
   "semantic": {
@@ -219,13 +237,13 @@ The top-level `semantic` is optional too. When present it needs every key of bot
 
 ### High Contrast
 
-The **High Contrast** family meets WCAG AAA. Text, muted text, the accent, status colours and diff colours have at least 7:1 contrast on the background and on panels, and its code colours at least 7:1 on the background. Borders have at least 3:1. This holds with Code colours and Diff colours set to From theme; a code colour theme or the Colour-blind safe preset is only guaranteed AA (at least 4.5:1 for diff colours). Dark is white on black with a yellow accent; light is black on white with a dark blue accent. A test checks these ratios.
+The **High Contrast** family meets WCAG AAA. Text, muted text, the accent, status colours and diff colours have at least 7:1 contrast on the background and on panels (text and muted text also on the title bar, side menu, cards, hover and selected rows), and its code colours at least 7:1 on the background. Borders have at least 3:1. This holds with Code colours and Diff colours set to From theme; a code colour theme or the Colour-blind safe preset is only guaranteed AA (at least 4.5:1 for diff colours). Dark is white on black with a yellow accent; light is black on white with a dark blue accent. A test checks these ratios.
 
 ### Diff colours
 
 **Diff colours** sets the colours of added, removed and conflicted lines and files, separately from the theme family. They are used in diffs (Changes, History, stashes, pull requests), file lists and the conflict resolver. **From theme** uses the family's own `diff` colours, or else its status colours (green and red in the built-in families). **Colour-blind safe** uses blue for added, orange for removed and reddish purple for conflicts. These hues stay apart with red-green colour blindness, and they are readable on every built-in family. **Reset to defaults** goes back to From theme.
 
-Colour is never the only signal. Changed lines keep their + and − markers in both the unified and the side-by-side view, and files keep their status letters (A, M, D, R, U, !).
+Colour is never the only signal. Changed lines keep their + and − markers in both the Inline and the Side by side layout, and files keep their status letters (A, M, D, R, U, !).
 
 ### Code colours
 
@@ -276,11 +294,13 @@ Updates come from the published releases of `LandonThomp/GitSimple-releases`. Th
 
 ## Account
 
-Your github.com sign-in (or the server sign-in the app is open on) and **Sign out**. Below it, **GitHub Enterprise Server** (collapsed in Basic mode until you add a server): the servers you added, each with its own **Sign in** / **Sign out**, and the trash button to remove one (refused while a repository on it is still added). **Add a server** asks for the server's address and the OAuth app client ID; see [Signing in to GitHub Enterprise Server](getting-started.md#signing-in-to-github-enterprise-server).
+The sign-in the app is open on (github.com, a server or GitLab; the label names it, such as **GitHub login**) and **Sign out**. Below it, **GitHub Enterprise Server** (collapsed in Basic mode until you add a server): the servers you added, each with its own **Sign in** / **Sign out**, and the trash button to remove one (refused while a repository on it is still added). **Add a server** asks for the server's address and the OAuth app client ID; see [Signing in to GitHub Enterprise Server](getting-started.md#signing-in-to-github-enterprise-server).
 
-**Your accounts.** Every account you're signed in to, grouped by GitHub (github.com first), with **Default** on the one repositories use unless you choose another. Each row's **…** menu has **Make default** and **Sign out**. **Add another account** signs in one more: GitHub adds whichever account your browser is signed in to, so switch accounts on github.com first. An account that isn't on the GitSimple invite list isn't added (the dialog says so); signing in again as an account you already have adds nothing.
+**Your accounts.** Every account you're signed in to, grouped by host (github.com first, then gitlab.com), with **Default** on the one repositories use unless you choose another. Under each login the row says where the account is: "GitHub · github.com", "GitLab · gitlab.com", or a server's address. Each row's **…** menu has **Make default** and **Sign out**. **Add another account** signs in one more: GitHub adds whichever account your browser is signed in to, so switch accounts on github.com first. An account that isn't on the GitSimple invite list isn't added (the dialog says so); signing in again as an account you already have adds nothing.
 
-**Which account a repository uses.** When you're signed in to more than one account on the same GitHub (a work and a personal github.com account, say), each repository uses one of them for its pushes, pulls, issues and pull requests: **Settings > Workspaces > GitHub account**. Adding a repository picks for you: your default account when it can see the repository, otherwise the first of your other accounts that can. The choice is saved at once. If a repository's account is signed out, a red bar at the top says so, with **Sign in again** and a button to use your default account instead.
+**GitLab.** **Add a GitLab account** signs in to gitlab.com (in the browser, or with **Use an access token**); once you have one, gitlab.com is listed with your other accounts, with **Add another account** under it. **Add a GitLab server** asks for the server's address and, optionally, the app ID your administrator gives you (GitLab 17.9 or newer). Without an app ID the server signs in with access tokens only ("Access token only"). Each GitLab server is listed with **Sign in** / **Sign out** and the trash button. A GitLab account that isn't on the GitSimple invite list (a gitlab.com username, or a server that isn't listed) isn't added, also when it would be the first on that GitLab; nothing of it is kept. An account signed in with an access token shows when its token runs out, a week before; see [Signing in to GitLab](getting-started.md#signing-in-to-gitlab).
+
+**Which account a repository uses.** When you're signed in to more than one account on the same GitHub or GitLab (a work and a personal github.com account, say), each repository uses one of them for its pushes, pulls, issues and pull requests: **Settings > Workspaces > GitHub account** (**GitLab account** for a GitLab repository). Adding a repository picks for you: your default account when it can see the repository, otherwise the first of your other accounts that can. The choice is saved at once. If a repository's account is signed out, a red bar at the top says so, with **Sign in again** and a button to use your default account instead.
 
 ## Notifications
 
@@ -310,14 +330,14 @@ What is never in the file:
 - Program paths: git.exe, the merge tools and the editor. Choose them again with **Browse** on the other computer.
 - Commit identities (names and emails) and which identity each repository commits as. An import leaves the ones on this computer as they are.
 - Imported font files. A setting that uses one goes back to the default font; import the font file there and choose it again.
-- Settings > Network and the GitHub Enterprise Servers you added.
+- Settings > Network and the servers you added (GitHub Enterprise Server and GitLab).
 - A repository's [checks before push](#checks-before-push), and which checks you trusted: they run programs, so they stay on the computer where you set them up.
 - Local folders, unless you switch on **Include local folders** (where each repository and new clones are on this computer). Leave it off when you share the file with others.
 
-**Import settings…** reads such a file and shows what would change, part by part: git settings, repositories, saved issue views, keyboard shortcuts, appearance, and updates and notifications, with the names of the settings that change. Parts that are already the same are greyed out. Untick what you don't want, then **Import**. Repositories that aren't here yet are added (from their local folder when the file has one and it holds that repository, otherwise without a folder; choose its local folder later in Settings > Workspaces). Only folders on a drive letter are used: network shares in a file are refused. A repository on a GitHub Enterprise Server you haven't added in Settings > Account is skipped.
+**Import settings…** reads such a file and shows what would change, part by part: git settings, repositories, saved issue views, keyboard shortcuts, appearance, and updates and notifications, with the names of the settings that change. Parts that are already the same are greyed out. Untick what you don't want, then **Import**. Repositories that aren't here yet are added (from their local folder when the file has one and it holds that repository, otherwise without a folder; choose its local folder later in Settings > Workspaces). Only folders on a drive letter are used: network shares in a file are refused. A repository on a GitHub Enterprise Server you haven't added in Settings > Account is skipped, and so is a GitLab repository that isn't here yet (add it from GitLab first; an import then updates its settings).
 
 The file is checked like a theme file: a value of the wrong type or out of range is refused with its name, and nothing is applied. A repository's issue and branch settings are checked when they are saved; one that fails is listed in the message at the end, and the other parts are still imported. Settings this version doesn't know are ignored, and a file from a newer version is refused.
 
 ## Supported hosts
 
-GitHub (github.com) and GitHub Enterprise Server (issues in label mode). GitLab, Bitbucket and Azure DevOps are planned.
+GitHub (github.com), GitHub Enterprise Server (issues in label mode), and GitLab: gitlab.com and GitLab servers your company runs, 16.0 or newer (issues in label mode; see [GitLab](gitlab.md)). Bitbucket and Azure DevOps are planned.

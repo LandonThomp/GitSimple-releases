@@ -72,14 +72,14 @@ One page per topic:
 
 ## Current
 
-- **GitLab**: issues, merge requests and CI status, on the host boundary 0.6.0 put in place
+- **Perforce workspaces**: a workspace whose code is on a Perforce server (issues stay on GitHub), plus the tracker features still missing (Severity, Component, Backlog)
 
 ## Coming soon
 
-- **Perforce workspaces**: a workspace whose code is on a Perforce server (issues stay on GitHub), plus the tracker features still missing (Severity, Component, Backlog)
+- **More GitLab**: GitLab To-Dos in the Inbox, reviews you finish before sending, tasks as sub-issues and a squash option
 - **Translations**: the first languages. Everything the app shows can be translated now, including its error and preview messages; what's left is choosing languages and reviewers. Native dialogs, Windows notifications and the tray menu stay English until then
 - **GitHub Enterprise**: notifications from an Enterprise Server in the Inbox, GitHub Projects mode and CI job logs on a server
-- **More hosts**: Azure DevOps and Bitbucket after GitLab
+- **More hosts**: Azure DevOps and Bitbucket
 
 Plans can change, and nothing here has a date.
 <!-- roadmap:end -->
