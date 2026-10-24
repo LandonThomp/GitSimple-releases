@@ -94,7 +94,7 @@ The command palette (`Ctrl+K`) also finds issues, pull requests, branches, files
 
 - The pages are listed on the left, README first, then the docs folder's pages and each subfolder's.
 - Links between pages, and to headings (`#section`), open in Docs. https links open in your browser. A link to another file in the repository opens Files; links that leave the repository do nothing.
-- Pictures stored in the repository show. Pictures from other websites (such as status badges) and HTML in the page show their description or are left out.
+- Pictures stored in the repository show, SVG drawings included. A picture written as HTML (`<picture>` or `<img>`, as many READMEs do) shows too; a `<picture>` with a light and a dark version shows the one that matches GitSimple's theme. An SVG is drawn as a picture, so any script in it doesn't run. Pictures from other websites (such as status badges) and other HTML in the page show their description or are left out.
 - **Open in editor** opens the page in your editor to change it.
 - The list follows the files committed to the branch; a page shows its text as it is in your working folder.
 
