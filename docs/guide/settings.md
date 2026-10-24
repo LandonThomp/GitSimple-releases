@@ -171,7 +171,7 @@ When something fails with a certificate error ("unknown issuer", "unable to get 
 
 ### Highlight colour
 
-**Highlight colour** changes the one accent colour of the window: the main (filled) button on each screen, the bar beside the selected menu item, links and the focus ring. The first swatch, with a dashed edge, keeps the theme's own colour; the others are orange, blue, teal, purple, pink and yellow. The chosen swatch has a ring and a check mark. The theme cards preview the colour you picked.
+**Highlight colour** changes the one accent colour of the window: the main (filled) button on each screen, the bar beside the selected menu item, links and the focus ring. The first swatch, with a palette icon, keeps the theme's own colour; the others are orange, blue, teal, purple, pink and yellow. The chosen swatch has a ring and a check mark. The theme cards preview the colour you picked.
 
 Text on the highlight colour is chosen automatically (the theme's text, the theme's background, black or white, whichever is readable at 4.5:1 or more), and where the colour is used as text or as the focus ring it is lightened or darkened until it stands out from the background. So every colour stays readable on every theme, light and dark, including High Contrast; a test checks each pair. **Reset to defaults** goes back to the theme's own colour.
 
