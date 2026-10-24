@@ -64,6 +64,8 @@ One page per topic:
 - **[Advanced git](docs/guide/advanced-git.md)**: stashes, rewriting history, resolving conflicts, undo, tags, remotes, the console
 - **[Issues](docs/guide/issues.md)**: list, board and sprints, the issue panel, GitHub Projects
 - **[GitLab](docs/guide/gitlab.md)**: what works differently on GitLab: access tokens, scoped labels, merge requests and pipelines
+- **[Inbox](docs/guide/inbox.md)**: GitHub notifications, Windows notifications, the tray
+- **[Unity projects](docs/guide/unity.md)**: `.meta` and GUID checks, project settings, Smart Merge, LFS and locks for game teams
 - **[Settings](docs/guide/settings.md)**: every setting with its default, themes
 - **[Keyboard shortcuts](docs/guide/shortcuts.md)**
 
