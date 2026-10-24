@@ -1,1 +1,2 @@
-{ "hashes": ["abe22096f4e9a6b9b9e74cde9d232a2fd3b027cdcad07a0e7e64bcd2dd59c02b"] }
+{ "hashes": ["abe22096f4e9a6b9b9e74cde9d232a2fd3b027cdcad07a0e7e64bcd2dd59c02b"],
+  "gitlab": { "hashes": ["e3bb62935b312e90241093371c1ce70841faac2fcc3b6c6ffe22982fa29643eb"] } }
