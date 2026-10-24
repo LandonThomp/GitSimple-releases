@@ -1,8 +1,10 @@
 # GitSimple
 
-**Your code and your GitHub issues, side by side, in one simple Windows app.**
+**Your code and your GitHub or GitLab issues, side by side, in one simple Windows app.**
 
 Pick a repository, see what to do next, and do it: commit, push, open a pull request, move an issue across the board. No terminal needed.
+
+Works with **GitHub** (github.com and Enterprise Server) and **GitLab** (gitlab.com and self-managed).
 
 ![GitSimple Home: the next step, status and your open issues](docs/images/home.png)
 
@@ -10,7 +12,7 @@ This repository only holds GitSimple's installers, updates and user guide. The s
 
 ## GitSimple is invite-only
 
-The app opens only for GitHub accounts on its invite list. If someone sent you this link, they have probably added you already. If the app says **"GitSimple is invite-only"** after you sign in, ask the person who invited you to check your GitHub username, then click **Check again**.
+The app opens only for GitHub and GitLab accounts on its invite list. If someone sent you this link, they have probably added you already. If the app says **"GitSimple is invite-only"** after you sign in, ask the person who invited you to check your GitHub or GitLab username, then click **Check again**.
 
 ## Install
 
@@ -22,9 +24,9 @@ You need Windows 10 or 11 and [Git for Windows](https://git-scm.com/download/win
 
 ## First launch
 
-1. Click **Sign in with GitHub**. Your browser opens GitHub, and the app shows a short code.
-2. Enter the code on GitHub and approve. GitSimple asks for the `repo`, `read:org` and `project` scopes so it can work with your repositories, issues and Projects.
-3. Add a repository: pick a folder that's already on your PC, or choose one of your GitHub repositories and clone it.
+1. Choose where your projects are: **GitHub**, **GitLab** or **A company server**. Your browser opens the sign-in page, and the app shows a short code.
+2. Enter the code there and approve. On GitHub, GitSimple asks for the `repo`, `read:org` and `project` scopes; on GitLab, for the `api` scope. On GitLab you can paste an access token instead (see [GitLab](docs/guide/gitlab.md)).
+3. Add a repository: pick a folder that's already on your PC, or choose one of your repositories and clone it.
 
 Your sign-in is stored in Windows Credential Manager, never in a file. You can sign out in **Settings, Account**.
 
@@ -61,6 +63,7 @@ One page per topic:
 - **[Code](docs/guide/code.md)**: commit, pull and push, branches, history, pull requests, linking code to issues
 - **[Advanced git](docs/guide/advanced-git.md)**: stashes, rewriting history, resolving conflicts, undo, tags, remotes, the console
 - **[Issues](docs/guide/issues.md)**: list, board and sprints, the issue panel, GitHub Projects
+- **[GitLab](docs/guide/gitlab.md)**: what works differently on GitLab: access tokens, scoped labels, merge requests and pipelines
 - **[Settings](docs/guide/settings.md)**: every setting with its default, themes
 - **[Keyboard shortcuts](docs/guide/shortcuts.md)**
 
