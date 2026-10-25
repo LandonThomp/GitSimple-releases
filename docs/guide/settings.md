@@ -157,9 +157,9 @@ When something fails with a certificate error ("unknown issuer", "unable to get 
 | Setting | Default | Notes |
 | --- | --- | --- |
 | Interface | Basic (new installs) | Basic or Advanced; see [Getting started](getting-started.md#basic-and-advanced-mode). "Reset to defaults" does not change it |
-| Theme | Calm | One card per theme, each with a small preview of the window: Calm, Windows, Obsidian & Copper, Midnight Evergreen, Graphite & Blue, Carbon & Teal, Nordic Frost, Ink & Indigo, High Contrast and themes you imported. Each has a dark and a light look. See [High Contrast](#high-contrast) |
+| Theme | Calm | One card per theme, each with a small preview of the window: Calm, Windows, Obsidian & Copper, Midnight Evergreen, Graphite & Blue, Carbon & Teal, Nordic Frost, Ink & Indigo, High Contrast and themes you imported. Each has a dark and a light look. A small icon in the corner of a card opens the [theme editor](#custom-themes): **Duplicate and edit** on a built-in theme, **Edit** on one you made or imported. See [High Contrast](#high-contrast) |
 | Follow Windows light and dark | Off (dark) | On: the light or dark look follows Windows. Off: a Dark / Light switch beside it picks one |
-| Highlight colour | The theme's own colour | Replaces the theme's accent: orange, blue, teal, purple, pink or yellow. See [Highlight colour](#highlight-colour) |
+| Highlight colour | The theme's own colour | Replaces the theme's accent: orange, blue, teal, purple, pink or yellow, or any colour of your own (Custom). See [Highlight colour](#highlight-colour) |
 | Show tips | On | A short tip on Home about saving, sharing and undoing work. Hiding the tip on Home turns this off |
 | Code colours | From theme | Also GitHub, One, Solarized, Dracula, or one you imported. See [Code colours](#code-colours) |
 | Diff colours | From theme | Also Colour-blind safe (blue added, orange removed). See [Diff colours](#diff-colours) |
@@ -167,15 +167,24 @@ When something fails with a certificate error ("unknown issuer", "unable to get 
 | Code font size / Code line height | 12.5 px / 1.6 | Size of code, and the space per line as a multiple of the size. See [Code text](#code-text) |
 | Code ligatures | On | Fonts that have them join `=>`, `!==` and similar into one sign. Off shows every character on its own |
 | Tab width | 8 | How many spaces a tab takes in code: 2, 4 or 8 |
+| Use another theme for the light look | Off | Only while Follow Windows light and dark is on: the theme cards then pick the dark look and a theme list picks the light look (for example Calm in the dark and Paper in Windows light mode). Off: one theme for both. In **More appearance options** |
+| Colour for this repository | Same as the app | A highlight colour for the open repository only, so you can tell repositories apart: the same swatches as Highlight colour, with **Same as the app** first. A small dot in this colour shows on the repository card at the top of the side menu (and beside the repository in its list). Without an open repository the row only says so. In **More appearance options** |
+| Corners | Default | Sharp, Default or Round: how round the corners of buttons, panels, cards and dialogs are (circles and pills do not change). In **More appearance options** |
 | Text size, density, animations | | |
+
+### More appearance options
+
+The rarely changed look settings sit in a folded group at the end of Appearance: **More appearance options**. It is open in Advanced mode and closed in Basic (click it to open); the settings search finds what is inside and opens it. It holds **Use another theme for the light look**, **Colour for this repository** and **Corners**. The light-look row is switched off, with a note, until **Follow Windows light and dark** is on; turning it on starts with the theme already selected, so nothing changes until you pick another one. Removing an imported theme that the light look uses sets it back to "same as the main theme". **Reset to defaults** resets the light-look theme and corners too, but keeps the colours you gave repositories (they belong to the repositories, like their issue views).
 
 ### Highlight colour
 
-**Highlight colour** changes the one accent colour of the window: the main (filled) button on each screen, the bar beside the selected menu item, links and the focus ring. The first swatch, with a palette icon, keeps the theme's own colour; the others are orange, blue, teal, purple, pink and yellow. The chosen swatch has a ring and a check mark. The theme cards preview the colour you picked.
+**Highlight colour** changes the one accent colour of the window: the main (filled) button on each screen, the bar beside the selected menu item, links and the focus ring. The first swatch, with a palette icon, keeps the theme's own colour; the next six are orange, blue, teal, purple, pink and yellow. The last swatch, **Custom**, shows a plus until you pick a colour of your own, then shows that colour. Choosing it opens a small panel with a colour picker and a colour code field (six digits after `#`, like `#F0915F`); a valid colour applies as you pick or type it, and a code that is not valid is flagged and not applied. The chosen swatch has a ring and a check mark. The theme cards preview the colour you picked. A custom colour is saved with Settings > Export and read back by Import; a code that is not `#RRGGBB` is refused.
 
 Text on the highlight colour is chosen automatically (the theme's text, the theme's background, black or white, whichever is readable at 4.5:1 or more), and where the colour is used as text or as the focus ring it is lightened or darkened until it stands out from the background. So every colour stays readable on every theme, light and dark, including High Contrast; a test checks each pair. **Reset to defaults** goes back to the theme's own colour.
 
 ### Custom themes
+
+**Theme editor.** The small icon in the corner of a theme card opens it: **Duplicate and edit** on a built-in theme (you get a copy named "<name> (custom)", numbered if that name is taken, and the original stays as it is) or **Edit** on a theme you made or imported (it is changed in place, and stays selected if you rename it). The dialog shows a larger preview of the window on one side. On the other side are the name, a **Dark** / **Light** switch (each look has its own colours) and the six base colours: background, panel, accent, text, secondary text and borders. Each colour has a colour picker and a code field (`#RRGGBB`, checked as you type; Save stays off while a code is not valid). **More colours** (closed at first) adds the optional status, diff and window surface colours described below; leave one empty and it is worked out from the six, and **From theme** puts a colour back to that. A colour the app has to change to keep text readable (secondary text, the accent used as text, borders, the optional colours) is kept as you typed it in the file, but the preview and the app show the adjusted colour, and the field says **Adjusted so text stays readable** (**Adjusted so lines stay visible** for borders). Nothing in the app changes until you press **Save**; **Cancel** discards your edits. Saving follows the import rules below (name up to 40 characters, not used by another theme, at most 20 of your own); a refusal is shown in the dialog. A saved copy is selected right away. Code colours are not part of the editor; they have [their own import and export](#code-colours).
 
 **Import theme** loads your own family from a JSON file. **Export current** saves the selected family in the same format (or copies it as JSON).
 
@@ -322,7 +331,7 @@ Windows notifications only appear while GitSimple isn't the window you're using.
 
 Moves your setup to another computer, or shares a team setup, as one JSON file.
 
-**Export settings** saves: appearance (theme, imported themes and code colours, fonts, diff options, Basic or Advanced), git settings, your repositories with their issue, branch and commit message settings and their own safety-net rules, saved issue views and filters, changed keyboard shortcuts, and the update and notification switches.
+**Export settings** saves: appearance (theme, imported themes and code colours, fonts, diff options, Basic or Advanced), git settings, your repositories with their issue, branch and commit message settings and their own safety-net rules, saved issue views and filters, the colour of each repository, changed keyboard shortcuts, and the update and notification switches.
 
 What is never in the file:
 
